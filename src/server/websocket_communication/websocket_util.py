@@ -8,22 +8,22 @@ class server:
         self.uri = "ws://localhost:5000"
         pass
 
-def send_data(self, data: any) -> None:
-    """
-    Sends data on uri ( see init )\n
-    via websockets
-    """
-    with connect(self.uri) as weboscket:
-        weboscket.send(data)
+    def send_data(self, data: any) -> None:
+        """
+        Sends data on uri ( see init )\n
+        via websockets
+        """
+        with connect(self.uri) as weboscket:
+            weboscket.send(data)
 
 
-def receive_data(self) -> any:
-    """
-    Receives data from uri ( see init )
-    via websockets
-    """
-    with connect(self.uri) as websocket:
-        data=websocket.recv()
-    return data
+    def receive_data(self) -> any:
+        """
+        Receives data from uri ( see init )
+        via websockets
+        """
+        with connect(self.uri) as websocket:
+            data=websocket.recv()
+        return data
 
 
