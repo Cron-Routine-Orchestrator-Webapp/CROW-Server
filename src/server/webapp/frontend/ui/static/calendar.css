@@ -1,0 +1,120 @@
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f6fa;
+        }
+
+        header {
+            background-color: #2f3640;
+            color: white;
+            padding: 15px 20px;
+            font-size: 20px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+        }
+
+        .nav-btn {
+            background-color: #40739e;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background-color: #273c75;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .weekdays div {
+            text-align: center;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            min-height: 120px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-number {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .job {
+            background-color: #dcdde1;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .job.active {
+            background-color: #44bd32;
+            color: white;
+        }
+
+        .job.planned {
+            background-color: #fbc531;
+        }
+
+        .job.done {
+            background-color: #718093;
+            color: white;
+        }
+
+        .today {
+            border: 2px solid #40739e;
+        }
+
+nav {
+    background-color: #353b48;
+    padding: 10px 20px;
+}
+
+nav a {
+    color: #dcdde1;
+    margin-right: 15px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: white;
+}

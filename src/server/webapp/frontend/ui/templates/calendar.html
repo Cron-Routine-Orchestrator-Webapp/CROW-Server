@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalender - Service Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'calendar.css' %}">
+</head>
+<body>
+
+<header>
+    Kalender Ansicht
+</header>
+<nav>
+    <a href="..">Dashboard</a>
+    <a href="">Kalender</a>
+    <a href="#">Programme</a>
+    <a href="#">Einstellungen</a>
+</nav>
+
+<div class="container">
+
+    <div class="calendar-header">
+        <button class="nav-btn">←</button>
+        <h2>{{ current_month }} {{ current_year }}</h2>
+        <button class="nav-btn">→</button>
+    </div>
+
+    <!-- Wochentage -->
+    <div class="weekdays">
+        <div>Mo</div>
+        <div>Di</div>
+        <div>Mi</div>
+        <div>Do</div>
+        <div>Fr</div>
+        <div>Sa</div>
+        <div>So</div>
+    </div>
+
+    <!-- Kalender Grid -->
+
+    <div class="calendar">
+        {% for day in calendar_days %}
+        <div class="day {% if day.is_today %}today{% endif %}">
+            
+            <div class="day-number">
+                {{ day.day }}
+            </div>
+
+            {% for job in day.jobs %}
+                <div class="job 
+                    {% if job.status == 'Aktiv' %}active{% endif %}
+                    {% if job.status == 'Geplant' %}planned{% endif %}
+                    {% if job.status == 'Abgeschlossen' %}done{% endif %}
+                ">
+                    {{ job.time }} - {{ job.title }}
+                </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+    <div class="calendar">
+
+    {% for i in start_weekday_range %}
+        <div class="day empty"></div>
+    {% endfor %}
+
+    {% for day in month_days %}
+        <div class="day">
+            <div class="day-number">{{ day }}</div>
+        </div>
+    {% endfor %}
+
+</div>
+</div>
+
+</body>
+</html>

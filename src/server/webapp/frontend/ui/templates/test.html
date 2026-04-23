@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<header>
+    Service Manager
+</header>
+
+<nav>
+    <a href="#">Dashboard</a>
+    <a href="calendar">Kalender</a>
+    <a href="#">Programme</a>
+    <a href="#">Einstellungen</a>
+</nav>
+
+<div class="container">
+
+    <!-- Formular -->
+    <div class="card">
+        <h2>Neues Programm planen</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <label>Titel</label>
+            <input type="text" name="title" placeholder="z.B. Backup Job">
+
+            <label>Beschreibung</label>
+            <textarea name="description" rows="3"></textarea>
+
+            <label>Datum</label>
+            <input type="date" name="date">
+
+            <label>Uhrzeit</label>
+            <input type="time" name="time">
+
+            <label>Status</label>
+            <select name="status">
+                <option>Geplant</option>
+                <option>Aktiv</option>
+                <option>Abgeschlossen</option>
+            </select>
+
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
+
+    <!-- Tabelle -->
+    <div class="card">
+        <h2>Geplante Programme</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Titel</th>
+                    <th>Datum</th>
+                    <th>Zeit</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for program in programs %}
+                <tr>
+                    <td>{{ program.title }}</td>
+                    <td>{{ program.date }}</td>
+                    <td>{{ program.time }}</td>
+                    <td>{{ program.status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Keine Einträge vorhanden</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Kalender -->
+    <div class="card">
+        <h2>Kalender (Monatsübersicht)</h2>
+        <div class="calendar">
+            {% for day in calendar_days %}
+            <div class="day">
+                <strong>{{ day.date }}</strong>
+                {% for program in day.programs %}
+                    <div>{{ program.title }}</div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
