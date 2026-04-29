@@ -1,11 +1,42 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,redirect
+
 import calendar
 from datetime import datetime
-
+from .models import Job  
 # Create your views here.
 
 def home(request):
-    return render(request, "test.html")
+    print("POST angekommen")
+    if request.method == "POST":
+        print("If abfrage bestanden")
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        date = request.POST.get("date")
+        time = request.POST.get("time")
+        status = request.POST.get("status")
+
+        # 👉 in DB speichern
+        Job.objects.create(
+            title=title,
+            description=description,
+            date=date,
+            time=time,
+            status=status,
+        )
+
+        return redirect("dashboard")  # verhindert doppelte submits
+
+    programs = Job.objects.all()
+
+    return render(request, "test.html", {
+        "programs": programs,
+        "calendar_days": []  # erstmal leer
+    })
+
+
+    
+
+
 
 
 def calendar_view(request):
