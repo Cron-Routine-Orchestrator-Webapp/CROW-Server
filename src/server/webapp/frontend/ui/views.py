@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect
 
 import calendar
-from datetime import datetime
-from .models import Job  
+from datetime import datetime,date
+from .models import Job,Client 
 # Create your views here.
 
-def home(request):
+def dashboard(request):
     print("POST angekommen")
     if request.method == "POST":
         print("If abfrage bestanden")
@@ -28,33 +28,53 @@ def home(request):
 
     programs = Job.objects.all()
 
-    return render(request, "test.html", {
+    return render(request, "dashboard.html", {
         "programs": programs,
         "calendar_days": []  # erstmal leer
     })
 
+def home(request):
+    selected_date = request.GET.get("date")
+    print(selected_date)  # DEBUG
 
+
+
+
+    clients = Client.objects.all()
+
+    return render(request, "dashboard.html", {
+        "selected_date": selected_date,
+        "clients": clients
+    })
     
+
 
 
 
 
 def calendar_view(request):
     now = datetime.now()
-
     year = now.year
     month = now.month
 
-    # Wochentag des 1. Tages (0=Montag)
     start_weekday, num_days = calendar.monthrange(year, month)
+
+    calendar_days = []
+
+    for day in range(1, num_days + 1):
+        current_date = date(year, month, day)
+
+        calendar_days.append({
+            "day": day,
+            "date": current_date,
+            "jobs": []  # später: deine DB Jobs filtern
+        })
 
     context = {
         "current_year": year,
         "current_month": now.strftime("%B"),
-        "current_month_number": month,
-        "month_days": list(range(1, num_days + 1)),
+        "calendar_days": calendar_days,
         "start_weekday_range": range(start_weekday),
-        "jobs": None#Job.objects.all()
     }
 
     return render(request, "calendar.html", context)

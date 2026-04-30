@@ -9,9 +9,17 @@
 </head>
 <body>
 
+<style>
+    .day{
+        text-decoration: none; color: inherit
+    }
+</style>
+
+
 <header>
     Kalender Ansicht
 </header>
+
 <nav>
     <a href="..">Dashboard</a>
     <a href="">Kalender</a>
@@ -38,45 +46,37 @@
         <div>So</div>
     </div>
 
-    <!-- Kalender Grid -->
-
+    <!-- EINZIGER Kalender -->
     <div class="calendar">
-        {% for day in calendar_days %}
-        <div class="day {% if day.is_today %}today{% endif %}">
-            
-            <div class="day-number">
-                {{ day.day }}
-            </div>
 
-            {% for job in day.jobs %}
-                <div class="job 
-                    {% if job.status == 'Aktiv' %}active{% endif %}
-                    {% if job.status == 'Geplant' %}planned{% endif %}
-                    {% if job.status == 'Abgeschlossen' %}done{% endif %}
-                ">
-                    {{ job.time }} - {{ job.title }}
-                </div>
-            {% endfor %}
-
-        </div>
+        <!-- Leere Felder am Monatsanfang -->
+        {% for i in start_weekday_range %}
+            <div class="day empty"></div>
         {% endfor %}
+
+        <!-- Echte Tage -->
+        {% for day in calendar_days %}
+            <a href="/?date={{ day.date|date:'Y-m-d' }}" class="day">
+                
+                <div class="day-number">
+                    {{ day.day }}
+                </div>
+
+                {% for job in day.jobs %}
+                    <div class="job 
+                        {% if job.status == 'Aktiv' %}active{% endif %}
+                        {% if job.status == 'Geplant' %}planned{% endif %}
+                        {% if job.status == 'Abgeschlossen' %}done{% endif %}
+                    ">
+                        {{ job.time }} - {{ job.title }}
+                    </div>
+                {% endfor %}
+
+            </a>
+        {% endfor %}
+
     </div>
 
-
-
-    <div class="calendar">
-
-    {% for i in start_weekday_range %}
-        <div class="day empty"></div>
-    {% endfor %}
-
-    {% for day in month_days %}
-        <div class="day">
-            <div class="day-number">{{ day }}</div>
-        </div>
-    {% endfor %}
-
-</div>
 </div>
 
 </body>

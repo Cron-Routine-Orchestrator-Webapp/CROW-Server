@@ -17,7 +17,7 @@
 </header>
 
 <nav>
-    <a href="#">Dashboard</a>
+    <a href="/">Dashboard</a>
     <a href="calendar">Kalender</a>
     <a href="#">Programme</a>
     <a href="#">Einstellungen</a>
@@ -39,7 +39,7 @@
             <input type="text" name="title" placeholder="z.B. Backup Job">
 
             <label>Beschreibung</label>
-            <textarea name="description" rows="3"></textarea>
+            <input type="text" name="description" rows="3"></input>
 
             <label>Datum</label>
             <input type="date" name="date">
@@ -50,11 +50,11 @@
             <label>Betriebssystem</label>
             <input type="text" id="os-info" name="os" value="" readonly>
 
-            <label>Status</label>
-            <select name="status">
-                <option>Geplant</option>
-                <option>Aktiv</option>
-                <option>Abgeschlossen</option>
+            <label>Client</label>
+            <select name="client">
+                {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }} | {{ client.ip }} | {{ client.os }}</option>
+                {% endfor %}
             </select>
 
             <button type="submit">Speichern</button>
@@ -141,5 +141,26 @@
         // Display the detected OS
         document.getElementById("os-info").value = getUserOS();
     </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const input = document.querySelector('input[name="date"]');
+    const params = new URLSearchParams(window.location.search);
+    const urlDate = params.get("date");
+
+    if (!input) return;
+
+    // 👉 Wichtig: merkt sich ob User schon geändert hat
+    let userTouched = false;
+
+    input.addEventListener("input", function() {
+        userTouched = true;
+    });
+
+    // 👉 Nur beim initialen Laden setzen
+    if (urlDate && !userTouched) {
+        input.value = urlDate;
+    }
+});
+</script>
 </body>
 </html>
