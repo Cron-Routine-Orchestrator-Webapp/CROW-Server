@@ -17,3 +17,11 @@ class Task(models.Model):
     status = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+class Client(models.Model):
+    id = models.CharField(max_length=255, primary_key=True)
+    name = models.CharField(max_length=255)
+    ip = models.GenericIPAddressField()
+    os = models.CharField(max_length=255)

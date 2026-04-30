@@ -22,7 +22,11 @@
     <a href="#">Programme</a>
     <a href="#">Einstellungen</a>
 </nav>
-
+<style>
+            body{
+            color: black;
+        }
+</style>
 <div class="container">
 
     <!-- Formular -->
@@ -42,6 +46,9 @@
 
             <label>Uhrzeit</label>
             <input type="time" name="time">
+            
+            <label>Betriebssystem</label>
+            <input type="text" id="os-info" name="os" value="" readonly>
 
             <label>Status</label>
             <select name="status">
@@ -100,5 +107,39 @@
 
 </div>
 
+<script>
+        function getUserOS() {
+            try {
+                console.log("Detecting user OS...");
+                const userAgent = window.navigator.userAgent || "";
+                const platform = window.navigator.platform || "";
+                const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+                const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+                const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+
+                let os = "Unknown OS";
+
+                if (macosPlatforms.includes(platform)) {
+                    os = "macOS";
+                } else if (iosPlatforms.includes(platform)) {
+                    os = "iOS";
+                } else if (windowsPlatforms.includes(platform)) {
+                    os = "Windows";
+                } else if (/Android/i.test(userAgent)) {
+                    os = "Android";
+                } else if (/Linux/i.test(platform)) {
+                    os = "Linux";
+                }
+
+                return os;
+            } catch (error) {
+                console.error("Error detecting OS:", error);
+                return "Unknown OS";
+            }
+        }
+
+        // Display the detected OS
+        document.getElementById("os-info").value = getUserOS();
+    </script>
 </body>
 </html>

@@ -8,37 +8,29 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "frontend.settings")
 
 django.setup()
 
-from ui.models import Job, Task
+from ui.models import Job, Task, Client
 
 
 def run():
-    job_id = "test_job"
-
-    job, created = Job.objects.get_or_create(
-        id=job_id,
+    client_id = "test_client"
+    client_name = "Test Client"
+    client_ip = "192.168.178.54"
+    client_os = "lin" # lin / win / mac
+    
+    client, created = Client.objects.get_or_create(
+        id=client_id,
         defaults={
-            "schedule": "* * * * *",
-            "enabled": True,
+            "id": client_id,
+            "name": client_name,
+            "ip": client_ip,
+            "os": client_os,
         },
     )
+    
+
 
     if created:
-        print("Job erstellt")
-    else:
-        print("Job existiert schon")
-
-    task = Task.objects.create(
-        id=str(uuid.uuid4()),
-        job=job,
-        status="new",
-    )
-
-    job.active_task_id = task.id
-    job.last_run = datetime.utcnow()
-    job.last_task_status = "new"
-    job.save()
-
-    print("Task erstellt:", task.id)
+        print("Client gespeichert:", client.id)
 
 
 if __name__ == "__main__":
