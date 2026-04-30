@@ -1,37 +1,12 @@
 from django.shortcuts import render,redirect
-
+from django.db import transaction
 import calendar
 from datetime import datetime,date
 from .models import Job,Client 
 # Create your views here.
 
-def dashboard(request):
-    print("POST angekommen")
-    if request.method == "POST":
-        print("If abfrage bestanden")
-        title = request.POST.get("title")
-        description = request.POST.get("description")
-        date = request.POST.get("date")
-        time = request.POST.get("time")
-        status = request.POST.get("status")
 
-        # 👉 in DB speichern
-        Job.objects.create(
-            title=title,
-            description=description,
-            date=date,
-            time=time,
-            status=status,
-        )
 
-        return redirect("dashboard")  # verhindert doppelte submits
-
-    programs = Job.objects.all()
-
-    return render(request, "dashboard.html", {
-        "programs": programs,
-        "calendar_days": []  # erstmal leer
-    })
 
 def home(request):
     selected_date = request.GET.get("date")
@@ -78,3 +53,39 @@ def calendar_view(request):
     }
 
     return render(request, "calendar.html", context)
+
+
+def get_next_client_id():
+    existing_ids = list(Client.objects.values_list("id", flat=True).order_by("id"))
+
+    expected = 1
+    for cid in existing_ids:
+        if cid != expected:
+            return expected
+        expected += 1
+
+    return expected
+
+
+def client_view(request):
+    if request.method == "POST":
+
+        with transaction.atomic():  # 👈 WICHTIG
+            next_id = get_next_client_id()
+
+            # doppelte Sicherheit
+            while Client.objects.filter(id=next_id).exists():
+                next_id += 1
+
+            Client.objects.create(
+                id=next_id,
+                name=request.POST.get("name"),
+                ip=request.POST.get("ip"),
+                os=request.POST.get("os")
+            )
+
+        return redirect("/clients")
+
+    return render(request, "clients.html", {
+        "clients": Client.objects.all()
+    })

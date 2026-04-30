@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients - Service Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+
+<header>
+    Service Manager - Clients
+</header>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/calendar">Kalender</a>
+    <a href="/clients">Clients</a>
+    <a href="#">Programme</a>
+    <a href="#">Einstellungen</a>
+</nav>
+
+<div class="container">
+
+    <!-- ➕ Client erstellen -->
+    <div class="card">
+        <h2>Neuen Client anlegen</h2>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label>Name</label>
+            <input type="text" name="name" placeholder="z.B. Server-01" required>
+
+            <label>IP-Adresse</label>
+            <input type="text" name="ip" placeholder="192.168.0.1" required>
+
+            <label>Betriebssystem</label>
+            <select name="os" required>
+                <option value="Windows">Windows</option>
+                <option value="Linux">Linux</option>
+                <option value="macOS">macOS</option>
+            </select>
+
+            <button type="submit">Client speichern</button>
+        </form>
+    </div>
+
+    <!-- 📋 Client Liste -->
+    <div class="card">
+        <h2>Alle Clients</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>IP-Adresse</th>
+                    <th>Betriebssystem</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.name }}</td>
+                    <td>{{ client.ip }}</td>
+                    <td>{{ client.os }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Keine Clients vorhanden</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
