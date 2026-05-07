@@ -24,6 +24,12 @@ def home(request):
     
 
 
+def jobs(request):
+    return render(request,"jobs.html",{
+        "clients": Client.objects.all()
+    })
+
+
 
 
 
@@ -86,6 +92,7 @@ def client_view(request):
 
         return redirect("/clients")
 
+    print(f"Clients: {Client.objects.all().values_list()}")
     return render(request, "clients.html", {
         "clients": Client.objects.all()
     })

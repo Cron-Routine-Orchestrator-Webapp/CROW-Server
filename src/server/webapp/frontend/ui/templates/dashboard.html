@@ -4,7 +4,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Service Manager</title>
+    <title>CROW - Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% load static %}
@@ -13,13 +13,13 @@
 <body>
 
 <header>
-    Service Manager
+    CROW - Dashboard
 </header>
 
 <nav>
     <a href="/">Dashboard</a>
     <a href="calendar">Kalender</a>
-    <a href="#">Programme</a>
+    <a href="/jobs">Programme</a>
     <a href="#">Einstellungen</a>
     <a href="/clients">Clients</a>
 </nav>
@@ -91,20 +91,7 @@
         </table>
     </div>
 
-    <!-- Kalender -->
-    <div class="card">
-        <h2>Kalender (Monatsübersicht)</h2>
-        <div class="calendar">
-            {% for day in calendar_days %}
-            <div class="day">
-                <strong>{{ day.date }}</strong>
-                {% for program in day.programs %}
-                    <div>{{ program.title }}</div>
-                {% endfor %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+    
 
 </div>
 
