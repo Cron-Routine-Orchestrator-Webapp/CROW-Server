@@ -8,11 +8,15 @@ from ui.models import Job, Client
 
 class DatabaseBackend:
     def __init__(self):
-        self.clients = list(Client.objects.all().values_list())
-        self.jobs = list(Job.objects.all().values_list())
-
+        pass
     def get_clients(self):
+
+        self.clients = list(Client.objects.all().values_list())
+        
         return self.clients
 
     def get_jobs(self):
+        self.jobs = list(Job.objects.all().values_list())
         return self.jobs
+    
+    
