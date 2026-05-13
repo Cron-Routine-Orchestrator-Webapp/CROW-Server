@@ -42,8 +42,42 @@
             <label>Beschreibung</label>
             <input type="text" name="description" rows="3"></input>
 
-            <label>Datum</label>
-            <input type="date" name="date">
+
+            <!-- Datum Label -->
+            <label for="date-input">Datum</label>
+            <input type="date" 
+                id="date-input" 
+                name="date" 
+                value="{{ request.GET.date }}">
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const dateInput = document.getElementById('date-input');
+
+                    function updateUrl() {
+                        if (dateInput.value) {
+                            const url = new URL(window.location);
+                            url.searchParams.set('date', dateInput.value);
+                            // Ändert die URL in der Browserzeile, ohne die Seite neu zu laden
+                            window.history.pushState({}, '', url);
+                        }
+                    }
+
+                    // Reagiert auf Enter
+                    dateInput.addEventListener('keypress', function (e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault(); // Verhindert das Abschicken des ganzen Formulars
+                            updateUrl();
+                        }
+                    });
+
+                    // Reagiert auf Rausklicken (Blur) oder Tab
+                    dateInput.addEventListener('blur', updateUrl);
+                    
+                    // Reagiert auf direkte Auswahl im Kalender-Widget
+                    dateInput.addEventListener('change', updateUrl);
+                });
+            </script>
 
             <label>Uhrzeit</label>
             <input type="time" name="time">
