@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>CROW - Job Manager</title>
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% load static %}
@@ -20,6 +20,47 @@
             gap: 20px;
         }
 
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
         .badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -33,41 +74,8 @@
             background: #2ecc71;
         }
 
-        .paused {
-            background: #e67e22;
-        }
-
         .stopped {
             background: #e74c3c;
-        }
-
-        .repeat-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-        }
-
-        .day {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 10px;
-            min-height: 90px;
-            background: #fafafa;
-        }
-
-        .job-item {
-            background: #3498db;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin-top: 5px;
-            font-size: 12px;
         }
 
         @media(max-width: 900px) {
@@ -85,10 +93,9 @@
 
 <nav>
     <a href="/">Dashboard</a>
-    <a href="/calendar">Kalender</a>
     <a href="/jobs">Jobs</a>
+    <a href="/tasks">Tasks</a>
     <a href="/clients">Clients</a>
-    <a href="/settings">Einstellungen</a>
 </nav>
 
 <div class="container">
@@ -97,198 +104,132 @@
 
         <!-- Formular -->
         <div class="card">
+
             <h2>Neuen Job erstellen</h2>
 
             <form method="post">
                 {% csrf_token %}
 
-                <label>Job Name</label>
-                <input type="text" name="title" placeholder="z.B. Nacht Backup">
+                <!-- Job ID -->
+                <label>Job ID</label>
+                <input type="text"
+                       name="id"
+                       placeholder="z.B. nightly_backup_job"
+                       required>
 
-                <label>Beschreibung</label>
-                <textarea name="description" rows="3"></textarea>
+                <!-- Task auswählen -->
+                <label>Task auswählen</label>
+                <select name="task_id" required>
 
-                <label>Programm / Script</label>
-                <select name="script_type" id="script_type">
-                    <!--<option value="exe">Programm (.exe)</option>-->
-                    <option value="python">Python Script (.py)</option>
-                    <option value="command">Command</option>
-                    <option value="shell_command">Shell command</option>
-                    <!--<option value="script">Script (.sh, .bat, .ps1)</option>-->
-                </select>
-                
-                <!-- Python -->
-                <div id="python_input">
-                    <label>Python Datei</label>
-                    <input type="text"
-                        name="python_script"
-                        placeholder="C:/backup.py oder /home/user/backup.py">
-                    <label>Python Interpreter</label>
-                    <input type="text" name="python_executable"
-                           placeholder="C:/Python39/python.exe oder /usr/bin/python3">
-                </div>
+                    {% for task in tasks %}
+                    <option value="{{ task.id }}">
+                        {{ task.id }} | {{ task.job_type }}
+                    </option>
+                    {% endfor %}
 
-                <!-- Command -->
-                <div id="command_input" style="display:none;">
-                    <label>Command</label>
-                    <input type="text"
-                        name="command"
-                        placeholder="ipconfig /all">
-                </div>
-
-                <!-- Shell -->
-                <div id="shell_input" style="display:none;">
-                    <label>Shell Command</label>
-                    <textarea name="shell_command"
-                            rows="4"
-                            placeholder="sudo systemctl restart apache2"></textarea>
-                </div>
-
-                <script>
-                document.addEventListener("DOMContentLoaded", function () {
-
-                    const select = document.getElementById("script_type");
-
-                    const pythonInput = document.getElementById("python_input");
-                    const commandInput = document.getElementById("command_input");
-                    const shellInput = document.getElementById("shell_input");
-
-                    function updateInputs() {
-
-                        const value = select.value;
-
-                        // alles verstecken
-                        pythonInput.style.display = "none";
-                        commandInput.style.display = "none";
-                        shellInput.style.display = "none";
-
-                        // passendes anzeigen
-                        if (value === "python") {
-                            pythonInput.style.display = "block";
-                        }
-
-                        if (value === "command") {
-                            commandInput.style.display = "block";
-                        }
-
-                        if (value === "shell_command") {
-                            shellInput.style.display = "block";
-                        }
-                    }
-
-                    // Initial
-                    updateInputs();
-
-                    // Bei Änderung
-                    select.addEventListener("change", updateInputs);
-
-                });
-                </script>
-
-
-                <label>Startdatum</label>
-                <input type="date" name="date">
-
-                <label>Uhrzeit</label>
-                <input type="time" name="time">
-
-                <label>Wiederholen</label>
-                <select name="repeat">
-                    <option value="once">Einmalig</option>
-                    <option value="daily">Täglich</option>
-                    <option value="weekly">Wöchentlich</option>
-                    <option value="monthly">Monatlich</option>
                 </select>
 
-                <label>Priorität</label>
-                <select name="priority">
-                    <option value="low">Niedrig</option>
-                    <option value="normal">Normal</option>
-                    <option value="high">Hoch</option>
-                </select>
+                <!-- Client auswählen -->
+                <label>Client auswählen</label>
+                <select name="client_id" required>
 
-                <label>Zielmaschine</label>
-                <select name="client">
                     {% for client in clients %}
                     <option value="{{ client.id }}">
                         {{ client.name }} | {{ client.ip }} | {{ client.os }}
                     </option>
                     {% endfor %}
+
                 </select>
 
+                <!-- Zeitpunkt -->
+                <label>Zeitpunkt der Ausführung</label>
+                <input type="datetime-local"
+                       name="time_to_run"
+                       required>
+
+                <!-- Aktiv -->
                 <label>Aktiv</label>
                 <select name="enabled">
-                    <option value="true">Ja</option>
-                    <option value="false">Nein</option>
+
+                    <option value="true">
+                        Ja
+                    </option>
+
+                    <option value="false">
+                        Nein
+                    </option>
+
                 </select>
 
-                <button type="submit">Job speichern</button>
+                <button type="submit">
+                    Job speichern
+                </button>
+
             </form>
+
         </div>
 
         <!-- Übersicht -->
         <div class="card">
-            <h2>Geplante Jobs</h2>
+
+            <h2>Vorhandene Jobs</h2>
 
             <table>
+
                 <thead>
                     <tr>
-                        <th>Job</th>
-                        <th>Zeit</th>
-                        <th>Wiederholung</th>
-                        <th>Maschine</th>
+                        <th>ID</th>
+                        <th>Task</th>
+                        <th>Client</th>
                         <th>Status</th>
                     </tr>
                 </thead>
 
                 <tbody>
+
                     {% for job in jobs %}
                     <tr>
-                        <td>{{ job.title }}</td>
-                        <td>{{ job.time }}</td>
-                        <td>{{ job.repeat }}</td>
-                        <td>{{ job.client.name }}</td>
+
+                        <td>{{ job.id }}</td>
+
+                        <td>{{ job.task_id }}</td>
+
+                        <td>{{ job.client_id }}</td>
 
                         <td>
-                            {% if job.status == "active" %}
-                                <span class="badge active">Aktiv</span>
-                            {% elif job.status == "paused" %}
-                                <span class="badge paused">Pausiert</span>
+
+                            {% if job.enabled %}
+                                <span class="badge active">
+                                    Aktiv
+                                </span>
                             {% else %}
-                                <span class="badge stopped">Gestoppt</span>
+                                <span class="badge stopped">
+                                    Deaktiviert
+                                </span>
                             {% endif %}
+
                         </td>
+
                     </tr>
                     {% empty %}
+
                     <tr>
-                        <td colspan="5">Keine Jobs vorhanden</td>
+                        <td colspan="4">
+                            Keine Jobs vorhanden
+                        </td>
                     </tr>
+
                     {% endfor %}
+
                 </tbody>
+
             </table>
+
         </div>
 
     </div>
 
-
-
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-
-    const dateInput = document.querySelector('input[name="date"]');
-
-    const params = new URLSearchParams(window.location.search);
-
-    const urlDate = params.get("date");
-
-    if (dateInput && urlDate) {
-        dateInput.value = urlDate;
-    }
-
-});
-</script>
 
 </body>
 </html>
