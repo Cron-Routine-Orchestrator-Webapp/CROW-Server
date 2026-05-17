@@ -83,6 +83,25 @@
                 grid-template-columns: 1fr;
             }
         }
+        .error{
+            color: rgb(196, 25, 25);
+            font-size: small;
+        }
+        nav a {
+    color: #dcdde1;
+    margin-right: 15px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: white;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
     </style>
 </head>
 <body>
@@ -112,6 +131,7 @@
 
                 <!-- Job ID -->
                 <label>Job ID</label>
+                <p class="error">{{error}}</p>
                 <input type="text"
                        name="id"
                        placeholder="z.B. nightly_backup_job"
@@ -151,11 +171,11 @@
                 <label>Aktiv</label>
                 <select name="enabled">
 
-                    <option value="true">
+                    <option value="True">
                         Ja
                     </option>
 
-                    <option value="false">
+                    <option value="False">
                         Nein
                     </option>
 
@@ -192,7 +212,7 @@
 
                         <td>{{ job.id }}</td>
 
-                        <td>{{ job.task_id }}</td>
+                        <td><a href="/tasks">{{ job.task_id }}</a></td>
 
                         <td>{{ job.client_id }}</td>
 

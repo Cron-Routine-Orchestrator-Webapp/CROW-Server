@@ -9,7 +9,7 @@ class Job(models.Model):
 
     task_id = models.CharField(max_length=255, null=False, blank=True)
 
-    time_to_run = models.DateTimeField(null=False, blank=True,default=None)
+    time_to_run = models.DateTimeField(null=False, blank=True,default=1)
 
     last_run = models.DateTimeField(null=True, blank=True)
     

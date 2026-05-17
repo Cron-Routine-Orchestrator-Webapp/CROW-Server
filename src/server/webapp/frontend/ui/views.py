@@ -1,8 +1,9 @@
 from django.shortcuts import render,redirect
 from django.db import transaction
+import django
 import calendar
 from datetime import datetime,date
-from .models import Job,Client 
+from .models import Job,Client,Task
 # Create your views here.
 
 
@@ -25,11 +26,60 @@ def home(request):
 
 
 def jobs(request):
+    clients_list=list(Client.objects.all())
+    tasks_list=list(Task.objects.all())
+    jobs_list=list(Job.objects.all())
+    if request.method == "POST":
+        with transaction.atomic(): 
+            try:
+                Job.objects.create(
+                    id = request.POST.get("id"),
+                    enabled = request.POST.get("enabled"),
+                    task_id = request.POST.get("task_id"),
+                    client_id = request.POST.get("client_id"),
+                    time_to_run = request.POST.get("time_to_run"),
+                    last_task_status = request.POST.get("enabled")
+                )
+            except django.db.utils.IntegrityError:
+                return render(request,"jobs.html",{
+                    "clients": clients_list,
+                    "tasks":tasks_list,
+                    "jobs":jobs_list,
+                    "error":"Eine Job unter diesem Namen existiert bereits! Siehe rechts!"
+                })
+
+    clients_list=list(Client.objects.all())
+    tasks_list=list(Task.objects.all())
+    jobs_list=list(Job.objects.all())
     return render(request,"jobs.html",{
-        "clients": Client.objects.all()
+                    "clients": clients_list,
+                    "tasks":tasks_list,
+                    "jobs":jobs_list
+                })
+
+
+def tasks(request):
+    tasks_list = list(Task.objects.all())
+    if request.method == "POST":
+        with transaction.atomic(): 
+
+
+
+            try:
+                Task.objects.create(
+                    id=request.POST.get("id"),
+                    job_type=request.POST.get("job_type"),
+                    parameters=request.POST.get("parameters")
+                )
+            except django.db.utils.IntegrityError:
+                return render(request, "tasks.html", {
+                    "error": "Eine Task unter diesem Namen existiert bereits! Siehe rechts!",
+                    "tasks":tasks_list
+                })
+
+    return render(request,"tasks.html", {
+        "tasks":tasks_list
     })
-
-
 
 
 
@@ -76,7 +126,7 @@ def get_next_client_id():
 def client_view(request):
     if request.method == "POST":
 
-        with transaction.atomic():  # 👈 WICHTIG
+        with transaction.atomic(): 
             next_id = get_next_client_id()
 
             # doppelte Sicherheit
