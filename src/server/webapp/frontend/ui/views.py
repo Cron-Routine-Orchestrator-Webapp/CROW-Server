@@ -68,15 +68,17 @@ def tasks(request):
             try:
                 Task.objects.create(
                     id=request.POST.get("id"),
-                    job_type=request.POST.get("job_type"),
-                    parameters=request.POST.get("parameters")
+                    task_type=request.POST.get("job_type"),
+                    task_data= {
+                        "parameters":request.POST.get("parameters")
+                        }
                 )
             except django.db.utils.IntegrityError:
                 return render(request, "tasks.html", {
                     "error": "Eine Task unter diesem Namen existiert bereits! Siehe rechts!",
                     "tasks":tasks_list
                 })
-
+    tasks_list = list(Task.objects.all())
     return render(request,"tasks.html", {
         "tasks":tasks_list
     })

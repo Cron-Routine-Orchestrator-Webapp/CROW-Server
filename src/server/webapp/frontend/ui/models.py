@@ -19,8 +19,8 @@ class Job(models.Model):
 class Task(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
     #job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    job_type = models.CharField(max_length=255,default = None, null=True, blank=True)
-    parameters = models.CharField(default=None, null=True, blank=True)
+    task_type = models.CharField(max_length=255,default = None, null=True, blank=True)
+    task_data = models.JSONField(default=dict, null=True, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
