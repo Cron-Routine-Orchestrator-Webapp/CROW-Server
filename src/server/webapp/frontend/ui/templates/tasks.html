@@ -148,14 +148,9 @@ a{
 
                 </select>
 
-                <!-- PARAMETERS -->
-                <label>Parameter</label>
+                <div id="dynamic-fields">
 
-                <textarea
-                    name="parameters"
-                    rows="6"
-                    placeholder="z.B. python3 backup.py oder ipconfig /all"
-                ></textarea>
+                </div>
 
                 <button type="submit">
                     Task speichern
@@ -233,5 +228,118 @@ a{
 
 </div>
 
+<script>
+
+    const fieldConfig = {
+
+        python: [
+
+            {
+                label: "Python Datei",
+                type: "text",
+                name: "python_file",
+                placeholder: "z.B. C:/Projects/backup.py"
+            },
+            {
+                label: "Python executable",
+                type: "text",
+                name: "python_exec",
+                placeholder: "C:/User/python/python.exe"
+            },
+
+            {
+                label: "Python Argumente",
+                type: "textarea",
+                name: "python_args",
+                placeholder: "--debug --port 5000"
+            }
+
+        ],
+
+        command: [
+
+            {
+                label: "CMD Befehl",
+                type: "textarea",
+                name: "cmd_command",
+                placeholder: "ipconfig /all"
+            }
+
+        ],
+
+        shell_command: [
+
+            {
+                label: "Shell Script",
+                type: "text",
+                name: "shell_file",
+                placeholder: "deploy.sh"
+            },
+
+            {
+                label: "Shell Parameter",
+                type: "textarea",
+                name: "shell_args",
+                placeholder: "--force"
+            }
+
+        ]
+
+    };
+
+    const jobTypeSelect = document.getElementById("job_type");
+    const dynamicFields = document.getElementById("dynamic-fields");
+
+    function loadFields(type) {
+
+        dynamicFields.innerHTML = "";
+
+        const fields = fieldConfig[type];
+
+        if (!fields) return;
+
+        fields.forEach(field => {
+
+            const wrapper = document.createElement("div");
+
+            const label = document.createElement("label");
+            label.innerText = field.label;
+
+            let input;
+
+            if (field.type === "textarea") {
+
+                input = document.createElement("textarea");
+                input.rows = 5;
+
+            } else {
+
+                input = document.createElement("input");
+                input.type = field.type;
+
+            }
+
+            input.name = field.name;
+            input.placeholder = field.placeholder || "";
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+
+            dynamicFields.appendChild(wrapper);
+
+        });
+
+    }
+
+    jobTypeSelect.addEventListener("change", function() {
+
+        loadFields(this.value);
+
+    });
+
+    // Initial laden
+    loadFields(jobTypeSelect.value);
+
+</script>
 </body>
 </html>

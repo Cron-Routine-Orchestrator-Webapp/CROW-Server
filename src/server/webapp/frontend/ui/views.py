@@ -70,8 +70,13 @@ def tasks(request):
                     id=request.POST.get("id"),
                     task_type=request.POST.get("job_type"),
                     task_data= {
-                        "parameters":request.POST.get("parameters")
-                        }
+                        "CMD" : request.POST.get("cmd_command"),
+                        "ARGS" : [
+                            request.POST.get("python_args").split(" ")
+                        ],
+                        "PYTHON_FILE" : request.POST.get("python_file"),
+                        "PYTHON_EXE" : request.POST.get("python_exec")
+                    }
                 )
             except django.db.utils.IntegrityError:
                 return render(request, "tasks.html", {
