@@ -91,6 +91,7 @@ nav a:hover {
 a{
     text-decoration: none;
 }
+
     </style>
 </head>
 <body>
@@ -104,6 +105,7 @@ a{
     <a href="/jobs">Jobs</a>
     <a href="/tasks">Tasks</a>
     <a href="/clients">Clients</a>
+    <a href="/calendar">Kalender</a>
 </nav>
 
 <div class="container">
@@ -191,12 +193,12 @@ a{
 
                         <!-- TYPE -->
                         <td>
-                            {{ task.job_type }}
+                            {{ task.task_type }}
                         </td>
 
                         <!-- PARAMETERS -->
-                        <td>
-                            {{ task.parameters }}
+                        <td class="shorten-data">
+                            {{ task.task_data }}
                         </td>
 
                         <!-- CREATED -->
