@@ -73,7 +73,8 @@ def tasks(request):
                     task_data= {
                         "CMD" : request.POST.get("cmd_command"),
                         "ARGS" : [
-                            request.POST.get("python_args").split(" ")
+                            request.POST.get("python_args").split(" "),
+                            request.POST.get("cmd_args").split(" ")
                         ],
                         "PYTHON_FILE" : request.POST.get("python_file"),
                         "PYTHON_EXE" : request.POST.get("python_exec")
