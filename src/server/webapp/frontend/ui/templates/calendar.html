@@ -31,9 +31,11 @@
 <div class="container">
 
     <div class="calendar-header">
-        <button class="nav-btn">←</button>
+        <a href="{{ prev_month_url }}" class="nav-btn">←</a>
+
         <h2>{{ current_month }} {{ current_year }}</h2>
-        <button class="nav-btn">→</button>
+
+        <a href="{{ next_month_url }}" class="nav-btn">→</a>
     </div>
 
     <!-- Wochentage -->

@@ -4,6 +4,7 @@ import django
 import calendar
 from datetime import datetime,date
 from .models import Job,Client,Task
+
 # Create your views here.
 
 
@@ -91,9 +92,15 @@ def tasks(request):
 
 
 def calendar_view(request):
-    now = datetime.now()
-    year = now.year
-    month = now.month
+
+    month_param = request.GET.get("month")
+
+    if month_param:
+        year, month = map(int, month_param.split("-"))
+    else:
+        now = datetime.now()
+        year = now.year
+        month = now.month
 
     start_weekday, num_days = calendar.monthrange(year, month)
 
@@ -105,14 +112,33 @@ def calendar_view(request):
         calendar_days.append({
             "day": day,
             "date": current_date,
-            "jobs": []  # später: deine DB Jobs filtern
+            "jobs": []
         })
+
+    # vorheriger Monat
+    prev_month = month - 1
+    prev_year = year
+
+    if prev_month == 0:
+        prev_month = 12
+        prev_year -= 1
+
+    # nächster Monat
+    next_month = month + 1
+    next_year = year
+
+    if next_month == 13:
+        next_month = 1
+        next_year += 1
 
     context = {
         "current_year": year,
-        "current_month": now.strftime("%B"),
+        "current_month": datetime(year, month, 1).strftime("%B"),
         "calendar_days": calendar_days,
         "start_weekday_range": range(start_weekday),
+
+        "prev_month_url": f"/calendar?month={prev_year}-{prev_month}",
+        "next_month_url": f"/calendar?month={next_year}-{next_month}",
     }
 
     return render(request, "calendar.html", context)
