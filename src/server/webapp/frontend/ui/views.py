@@ -5,6 +5,7 @@ import calendar
 from datetime import datetime, date
 from .models import Job, Client, Task
 from django.shortcuts import get_object_or_404
+import json
 
 # Create your views here.
 
@@ -91,6 +92,11 @@ def tasks(request):
     return render(request, "tasks.html", {"tasks": tasks_list})
 
 
+from collections import defaultdict
+from datetime import datetime, date
+import calendar
+
+
 def calendar_view(request):
 
     month_param = request.GET.get("month")
@@ -102,41 +108,71 @@ def calendar_view(request):
         year = now.year
         month = now.month
 
-    start_weekday, num_days = calendar.monthrange(year, month)
+    _, num_days = calendar.monthrange(year, month)
+    start_weekday, _ = calendar.monthrange(year, month)
 
+    # Monatsrange bauen
+    month_start = datetime(year, month, 1, 0, 0)
+    month_end = datetime(year, month, num_days, 23, 59, 59)
+
+    # 🔥 Jobs im Zeitraum holen
+    jobs = Job.objects.filter(time_to_run__gte=month_start, time_to_run__lte=month_end)
+
+    # 🔥 nach DATE gruppieren
+    jobs_by_date = defaultdict(list)
+
+    for job in jobs:
+
+        job_date = job.time_to_run.date()  # 🔑 WICHTIG
+
+        jobs_by_date[job_date].append(
+            {
+                "title": job.id,
+                "time": job.time_to_run.strftime("%H:%M"),
+                "status": ("Aktiv" if job.enabled else "Deaktiviert"),
+            }
+        )
+
+    # Kalender bauen
     calendar_days = []
 
     for day in range(1, num_days + 1):
+
         current_date = date(year, month, day)
 
-        calendar_days.append({"day": day, "date": current_date, "jobs": []})
+        calendar_days.append(
+            {
+                "day": day,
+                "date": current_date,
+                "jobs": jobs_by_date.get(current_date, []),
+            }
+        )
 
-    # vorheriger Monat
+    # Navigation
     prev_month = month - 1
     prev_year = year
-
     if prev_month == 0:
         prev_month = 12
         prev_year -= 1
 
-    # nächster Monat
     next_month = month + 1
     next_year = year
-
     if next_month == 13:
         next_month = 1
         next_year += 1
 
-    context = {
-        "current_year": year,
-        "current_month": datetime(year, month, 1).strftime("%B"),
-        "calendar_days": calendar_days,
-        "start_weekday_range": range(start_weekday),
-        "prev_month_url": f"/calendar?month={prev_year}-{prev_month}",
-        "next_month_url": f"/calendar?month={next_year}-{next_month}",
-    }
-
-    return render(request, "calendar.html", context)
+    return render(
+        request,
+        "calendar.html",
+        {
+            "current_year": year,
+            "current_month": datetime(year, month, 1).strftime("%B"),
+            "calendar_days": calendar_days,
+            "start_weekday_range": range(start_weekday),
+            "prev_month_url": f"/calendar?month={prev_year}-{prev_month}",
+            "next_month_url": f"/calendar?month={next_year}-{next_month}",
+        },
+    )
 
 
 def get_next_client_id():
@@ -175,14 +211,20 @@ def client_view(request):
 
 
 def job_detail(request, job_id):
-
+    print(job_id)
     job = Job.objects.get(id=job_id)
-
+    print(job)
     return render(request, "job_detail.html", {"job": job})
 
 
 def task_detail(request, task_id):
+    task = Task.objects.get(id=task_id)
 
-    task = get_object_or_404(Task, id=task_id)
+    try:
+        task_data = task.task_data
+        if isinstance(task_data, str):
+            task_data = json.loads(task_data)
+    except Exception:
+        task_data = {"raw": str(task.task_data)}
 
-    return render(request, "task_detail.html", {"task": task})
+    return render(request, "task_detail.html", {"task": task, "task_data": task_data})
