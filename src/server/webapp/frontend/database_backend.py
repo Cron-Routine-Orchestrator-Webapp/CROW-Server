@@ -11,6 +11,7 @@ from server.webapp.backend.helper.types import (
     Job as TypesJob,
     Task as TypesTask,
     TaskParameters,
+    Repeat,
 )
 
 
@@ -39,6 +40,7 @@ class DatabaseBackend:
                 str,
                 str,
                 datetime.datetime,
+                Repeat,
                 datetime.datetime | None,
                 str | None,
             ]
@@ -52,8 +54,9 @@ class DatabaseBackend:
                 CLIENT_ID=job[2],
                 TASK_ID=job[3],
                 TIME_TO_RUN=job[4],
-                LAST_RUN=job[5],
-                LAST_TASK_STATUS=job[6],
+                REPEAT=job[5],
+                LAST_RUN=job[6],
+                LAST_TASK_STATUS=job[7],
             )
             typed_jobs.append(typed_job)
         return typed_jobs

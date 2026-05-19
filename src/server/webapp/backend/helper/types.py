@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Literal
 import datetime
 
 
@@ -32,6 +33,7 @@ class Job(BaseModel):
     CLIENT_ID: str
     TASK_ID: str
     TIME_TO_RUN: datetime.datetime
+    REPEAT: Repeat
     LAST_RUN: datetime.datetime | None
     LAST_TASK_STATUS: str | None
 
@@ -50,3 +52,6 @@ class TaskParameters(BaseModel):
     ARGS: list[str] | None
     PYTHON_FILE: str | None
     PYTHON_EXE: str | None
+
+
+Repeat = Literal["None", "daily", "weekly", "2-weekly", "monthly", "yearly"]
