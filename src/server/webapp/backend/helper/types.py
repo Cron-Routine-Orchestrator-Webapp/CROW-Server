@@ -38,7 +38,15 @@ class Job(BaseModel):
 
 class Task(BaseModel):
     ID: str
-    JOB_TYPE: str | None
-    PARAMETERS: str | None
+    TASK_TYPE: str | None
+    TASK_PARAMETERS: TaskParameters
     CREATED_AT: datetime.datetime
     UPDATED_AT: datetime.datetime
+
+
+class TaskParameters(BaseModel):
+    CMD: str | None
+    SHELL_CMD: str | None
+    ARGS: list[str] | None
+    PYTHON_FILE: str | None
+    PYTHON_EXE: str | None

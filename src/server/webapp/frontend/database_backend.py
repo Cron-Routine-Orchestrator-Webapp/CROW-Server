@@ -10,6 +10,7 @@ from server.webapp.backend.helper.types import (
     Client as TypesClient,
     Job as TypesJob,
     Task as TypesTask,
+    TaskParameters,
 )
 
 
@@ -59,15 +60,21 @@ class DatabaseBackend:
 
     def get_tasks(self) -> list[TypesTask]:
         tasks: list[
-            tuple[str, str | None, str | None, datetime.datetime, datetime.datetime]
+            tuple[
+                str,
+                str | None,
+                dict[str, str | None] | None,
+                datetime.datetime,
+                datetime.datetime,
+            ]
         ] = list(Task.objects.all().values_list())
         typed_tasks: list[TypesTask] = []
 
         for task in tasks:
             typed_task: TypesTask = TypesTask(
                 ID=task[0],
-                JOB_TYPE=task[1],
-                PARAMETERS=task[2],
+                TASK_TYPE=task[1],
+                TASK_PARAMETERS=TaskParameters.model_validate(task[2]),
                 CREATED_AT=task[3],
                 UPDATED_AT=task[4],
             )
