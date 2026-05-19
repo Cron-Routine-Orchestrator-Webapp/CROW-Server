@@ -91,6 +91,78 @@ nav a:hover {
 a{
     text-decoration: none;
 }
+.task-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.task-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-id {
+    font-weight: bold;
+    color: #2f3640;
+    text-decoration: none;
+}
+
+.task-id:hover {
+    color: #3498db;
+}
+
+.task-meta {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.task-preview {
+    font-size: 13px;
+    color: #2f3640;
+}
+
+.preview-box {
+    background: #f5f6fa;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.preview-box.empty {
+    color: #95a5a6;
+}
+
+.task-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.open-btn {
+    background: #3498db;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.open-btn:hover {
+    background: #2980b9;
+}
 
     </style>
 </head>
@@ -165,68 +237,65 @@ a{
         <!-- TASK LISTE -->
         <div class="card">
 
-            <h2>Vorhandene Tasks</h2>
+    <h2>Vorhandene Tasks</h2>
 
-            <table>
+    <div class="task-list">
 
-                <thead>
+        {% for task in tasks %}
 
-                    <tr>
-                        <th>ID</th>
-                        <th>Typ</th>
-                        <th>Parameter</th>
-                        <th>Erstellt</th>
-                    </tr>
+        <div class="task-card">
 
-                </thead>
+            <!-- HEADER -->
+            <div class="task-header">
 
-                <tbody>
+                <a class="task-id" href="/tasks/{{ task.id }}">
+                    {{ task.id }}
+                </a>
 
-                    {% for task in tasks %}
+                <span class="badge">
+                    {{ task.task_type }}
+                </span>
 
-                    <tr>
+            </div>
 
-                        <!-- ID -->
-                        <td>
-                            <a href="/tasks/{{ task.id }}">
-                                {{ task.id }}
-                            </a>
-                        </td>
+            <!-- META -->
+            <div class="task-meta">
+                <div>
+                    <b>Erstellt:</b> {{ task.created_at }}
+                </div>
+            </div>
 
-                        <!-- TYPE -->
-                        <td>
-                            {{ task.task_type }}
-                        </td>
+            <!-- PREVIEW (WICHTIG!) -->
+            <div class="task-preview">
 
-                        <!-- PARAMETERS -->
-                        <td class="shorten-data">
-                            {{ task.task_data }}
-                        </td>
+                {% if task.task_data %}
+                    <div class="preview-box">
+                        {{ task.task_data|truncatechars:120 }}
+                    </div>
+                {% else %}
+                    <div class="preview-box empty">
+                        Kein Preview verfügbar
+                    </div>
+                {% endif %}
 
-                        <!-- CREATED -->
-                        <td>
-                            {{ task.created_at }}
-                        </td>
+            </div>
 
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-
-                        <td colspan="4">
-                            Keine Tasks vorhanden
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
+            <!-- ACTION -->
+            <div class="task-actions">
+                <a class="open-btn" href="/tasks/{{ task.id }}">
+                    Öffnen →
+                </a>
+            </div>
 
         </div>
+
+        {% empty %}
+            <p>Keine Tasks vorhanden</p>
+        {% endfor %}
+
+    </div>
+
+</div>
 
     </div>
 
