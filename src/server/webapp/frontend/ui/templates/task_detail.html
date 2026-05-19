@@ -1,20 +1,197 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ task.id }}</title>
+<meta charset="UTF-8">
+<title>Task {{ task.id }}</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<style>
+body {
+    margin: 0;
+    color: black;
+    background: #f5f6fa;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER / NAV (gleich wie Job Manager) */
+header {
+    background: #2f3640;
+    color: white;
+    padding: 15px 20px;
+    font-size: 20px;
+}
+
+nav {
+    background: #353b48;
+    padding: 10px 20px;
+}
+
+nav a {
+    color: #dcdde1;
+    margin-right: 15px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: white;
+}
+
+/* LAYOUT */
+.container {
+    padding: 20px;
+}
+
+/* CARDS (identisch zum Job Manager) */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* BADGE */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background: #3498db;
+    display: inline-block;
+}
+
+/* META */
+.meta-grid {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* JSON UI */
+.json-item {
+    border: 1px solid #eee;
+    border-left: 4px solid #3498db;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+.json-key {
+    font-weight: bold;
+    color: #2f3640;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.json-value {
+    color: #57606f;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.json-inner {
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 2px dashed #dcdde1;
+}
+
+/* TYPO */
+h2 {
+    margin-top: 0;
+}
+
+.page-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h1>{{ task.id }}</h1>
+<header>
+    CROW - Task Viewer
+</header>
 
-<p><b>Typ:</b> {{ task.task_type }}</p>
+<nav>
+    <a href="/tasks"><- Back</a>
 
-<pre>
-{{ task.task_data }}
-</pre>
+</nav>
 
-<a href="/tasks">← Zurück</a>
+<div class="container">
+
+    <!-- TASK INFO -->
+    <div class="card">
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="page-title">Task {{ task.id }}</div>
+            <span class="badge">{{ task.task_type }}</span>
+        </div>
+
+        <div class="meta-grid">
+            <div><b>ID</b></div>
+            <div>{{ task.id }}</div>
+
+            <div><b>Typ</b></div>
+            <div>{{ task.task_type }}</div>
+        </div>
+
+    </div>
+
+    <!-- TASK DATA -->
+    <div class="card">
+
+        <h2>Task Data</h2>
+
+        {% for key, value in task_data.items %}
+
+            <div class="json-item">
+
+                <span class="json-key">{{ key }}</span>
+
+                {% if value is dict %}
+
+                    <div class="json-inner">
+                        {% for k, v in value.items %}
+                            <div class="json-value">
+                                <b>{{ k }}:</b> {{ v }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                {% elif value is list %}
+
+                    <div class="json-inner">
+                        {% for item in value %}
+                            <div class="json-value">• {{ item }}</div>
+                        {% endfor %}
+                    </div>
+
+                {% else %}
+
+                    <div class="json-value">
+                        {{ value }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
 </body>
 </html>

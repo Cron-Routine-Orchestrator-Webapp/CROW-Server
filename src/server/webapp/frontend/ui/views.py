@@ -5,6 +5,7 @@ import calendar
 from datetime import datetime,date
 from .models import Job,Client,Task
 from django.shortcuts import get_object_or_404
+import json
 # Create your views here.
 
 
@@ -189,17 +190,24 @@ def client_view(request):
 
 
 def job_detail(request, job_id):
-
+    print(job_id)
     job = Job.objects.get(id=job_id)
-
+    print(job)
     return render(request, "job_detail.html", {
         "job": job
     })
 
 def task_detail(request, task_id):
+    task = Task.objects.get(id=task_id)
 
-    task = get_object_or_404(Task, id=task_id)
+    try:
+        task_data = task.task_data
+        if isinstance(task_data, str):
+            task_data = json.loads(task_data)
+    except Exception:
+        task_data = {"raw": str(task.task_data)}
 
     return render(request, "task_detail.html", {
-        "task": task
+        "task": task,
+        "task_data": task_data
     })
