@@ -67,14 +67,17 @@ def tasks(request):
 
 
             try:
+                args = request.POST.get("python_args")
+                if args == None:
+                    args = request.POST.get("cmd_args")
                 Task.objects.create(
                     id=request.POST.get("id"),
                     task_type=request.POST.get("job_type"),
                     task_data= {
                         "CMD" : request.POST.get("cmd_command"),
+                        "Shell_file": request.POST.get("shell_file"),
                         "ARGS" : [
-                            request.POST.get("python_args").split(" "),
-                            request.POST.get("cmd_args").split(" ")
+                            
                         ],
                         "PYTHON_FILE" : request.POST.get("python_file"),
                         "PYTHON_EXE" : request.POST.get("python_exec")
