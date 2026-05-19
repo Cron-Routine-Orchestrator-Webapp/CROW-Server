@@ -188,7 +188,9 @@ a{
 
                         <!-- ID -->
                         <td>
-                            {{ task.id }}
+                            <a href="/tasks/{{ task.id }}">
+                                {{ task.id }}
+                            </a>
                         </td>
 
                         <!-- TYPE -->
@@ -281,7 +283,7 @@ a{
             {
                 label: "Shell Script",
                 type: "text",
-                name: "shell_file",
+                name: "Shell_command",
                 placeholder: "deploy.sh"
             }
 

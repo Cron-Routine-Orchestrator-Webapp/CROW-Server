@@ -1,14 +1,120 @@
-
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>CROW - Dashboard</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #2c3e50;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 20px 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav {
+            background: #111827;
+            padding: 15px 40px;
+        }
+
+        nav a {
+            color: #d1d5db;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #3498db, #2563eb);
+            color: white;
+            padding: 40px;
+            border-radius: 18px;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            margin-top: 0;
+            font-size: 40px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+            transition: 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 16px;
+            background: #3498db;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            background: #2563eb;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -23,166 +129,91 @@
     <a href="/clients">Clients</a>
     <a href="/calendar">Kalender</a>
 </nav>
-<style>
-            body{
-            color: black;
-        }
-</style>
+
 <div class="container">
 
-    <!-- Formular -->
-    <div class="card">
-        <h2>Neues Programm planen</h2>
-        <form method="post">
-            {% csrf_token %}
-            
-            <label>Titel</label>
-            <input type="text" name="title" placeholder="z.B. Backup Job">
+    <div class="hero">
+        <h1>CROW Server Orchestrator</h1>
 
-            <label>Beschreibung</label>
-            <input type="text" name="description" rows="3"></input>
-
-
-            <!-- Datum Label -->
-            <label for="date-input">Datum</label>
-            <input type="date" 
-                id="date-input" 
-                name="date" 
-                value="{{ request.GET.date }}">
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const dateInput = document.getElementById('date-input');
-
-                    function updateUrl() {
-                        if (dateInput.value) {
-                            const url = new URL(window.location);
-                            url.searchParams.set('date', dateInput.value);
-                            // Ändert die URL in der Browserzeile, ohne die Seite neu zu laden
-                            window.history.pushState({}, '', url);
-                        }
-                    }
-
-                    // Reagiert auf Enter
-                    dateInput.addEventListener('keypress', function (e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault(); // Verhindert das Abschicken des ganzen Formulars
-                            updateUrl();
-                        }
-                    });
-
-                    // Reagiert auf Rausklicken (Blur) oder Tab
-                    dateInput.addEventListener('blur', updateUrl);
-                    
-                    // Reagiert auf direkte Auswahl im Kalender-Widget
-                    dateInput.addEventListener('change', updateUrl);
-                });
-            </script>
-
-            <label>Uhrzeit</label>
-            <input type="time" name="time">
-            
-            <label>Betriebssystem</label>
-            <input type="text" id="os-info" name="os" value="" readonly>
-
-            <label>Client</label>
-            <select name="client">
-                {% for client in clients %}
-                <option value="{{ client.id }}">{{ client.name }} | {{ client.ip }} | {{ client.os }}</option>
-                {% endfor %}
-            </select>
-
-            <button type="submit">Speichern</button>
-        </form>
+        <p>
+            Verwaltung von automatisierten Tasks, Clients und geplanten Jobs
+            über ein zentrales Webinterface.
+        </p>
     </div>
 
-    <!-- Tabelle -->
-    <div class="card">
-        <h2>Geplante Programme</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Titel</th>
-                    <th>Datum</th>
-                    <th>Zeit</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for program in programs %}
-                <tr>
-                    <td>{{ program.title }}</td>
-                    <td>{{ program.date }}</td>
-                    <td>{{ program.time }}</td>
-                    <td>{{ program.status }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">Keine Einträge vorhanden</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="grid">
+
+        <!-- Jobs -->
+        <div class="card">
+
+            <h2>⚙ Jobs</h2>
+
+            <p>
+                Erstelle und verwalte geplante Ausführungen für Tasks
+                auf verbundenen Clients.
+            </p>
+
+            <a href="/jobs">
+                Jobs öffnen
+            </a>
+
+        </div>
+
+        <!-- Tasks -->
+        <div class="card">
+
+            <h2>🧩 Tasks</h2>
+
+            <p>
+                Definiere Python-Skripte, Shell-Commands oder CMD-Befehle
+                als wiederverwendbare Tasks.
+            </p>
+
+            <a href="/tasks">
+                Tasks öffnen
+            </a>
+
+        </div>
+
+        <!-- Clients -->
+        <div class="card">
+
+            <h2>💻 Clients</h2>
+
+            <p>
+                Verwalte registrierte Systeme, Server und Zielgeräte
+                innerhalb deiner Infrastruktur.
+            </p>
+
+            <a href="/clients">
+                Clients öffnen
+            </a>
+
+        </div>
+
+        <!-- Kalender -->
+        <div class="card">
+
+            <h2>📅 Kalender</h2>
+
+            <p>
+                Übersicht aller geplanten Jobs und zukünftigen Ausführungen
+                in einer Kalenderansicht.
+            </p>
+
+            <a href="/calendar">
+                Kalender öffnen
+            </a>
+
+        </div>
+
     </div>
 
-    
+    <div class="footer">
+        CROW • Cron Routine Orchestrator Webapp
+    </div>
 
 </div>
 
-<script>
-        function getUserOS() {
-            try {
-                console.log("Detecting user OS...");
-                const userAgent = window.navigator.userAgent || "";
-                const platform = window.navigator.platform || "";
-                const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
-                const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
-                const iosPlatforms = ['iPhone', 'iPad', 'iPod'];
-
-                let os = "Unknown OS";
-
-                if (macosPlatforms.includes(platform)) {
-                    os = "macOS";
-                } else if (iosPlatforms.includes(platform)) {
-                    os = "iOS";
-                } else if (windowsPlatforms.includes(platform)) {
-                    os = "Windows";
-                } else if (/Android/i.test(userAgent)) {
-                    os = "Android";
-                } else if (/Linux/i.test(platform)) {
-                    os = "Linux";
-                }
-
-                return os;
-            } catch (error) {
-                console.error("Error detecting OS:", error);
-                return "Unknown OS";
-            }
-        }
-
-        // Display the detected OS
-        document.getElementById("os-info").value = getUserOS();
-    </script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const input = document.querySelector('input[name="date"]');
-    const params = new URLSearchParams(window.location.search);
-    const urlDate = params.get("date");
-
-    if (!input) return;
-
-    // 👉 Wichtig: merkt sich ob User schon geändert hat
-    let userTouched = false;
-
-    input.addEventListener("input", function() {
-        userTouched = true;
-    });
-
-    // 👉 Nur beim initialen Laden setzen
-    if (urlDate && !userTouched) {
-        input.value = urlDate;
-    }
-});
-</script>
 </body>
 </html>

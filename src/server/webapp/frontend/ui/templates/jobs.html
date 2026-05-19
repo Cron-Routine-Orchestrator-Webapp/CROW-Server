@@ -103,6 +103,78 @@ a{
     color: black;
 }
     </style>
+    <style>
+    .crow-btn {
+
+        background: #3498db;
+        color: white;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 12px 20px;
+
+        font-size: 14px;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 
+            background 0.2s ease,
+            transform 0.15s ease,
+            box-shadow 0.2s ease;
+
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .crow-btn:hover {
+
+        background: #2980b9;
+
+        transform: translateY(-1px);
+
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .crow-btn:active {
+
+        transform: scale(0.98);
+    }
+
+    .crow-btn:disabled {
+
+        background: #95a5a6;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    .field-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+}
+
+.small-btn {
+
+    width: auto;
+
+    padding: 8px 14px;
+
+    font-size: 13px;
+
+    text-decoration: none;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+</style>
 </head>
 <body>
 
@@ -139,16 +211,28 @@ a{
                        required>
 
                 <!-- Task auswählen -->
-                <label>Task auswählen</label>
-                <select name="task_id" required>
+                <div class="field-header">
+
+                    <label for="task-select">
+                        Task auswählen
+                    </label>
+
+                    <a href="/tasks/" class="crow-btn small-btn">
+                        + Neue Task
+                    </a>
+
+                </div>
+
+                <select id="task-select" name="task_id" required>
 
                     {% for task in tasks %}
-                    <option value="{{ task.id }}">
-                        {{ task.id }} | {{ task.job_type }}
-                    </option>
+                        <option value="{{ task.id }}">
+                            {{ task.id }} | {{ task.job_type }}
+                        </option>
                     {% endfor %}
 
                 </select>
+
 
                 <!-- Client auswählen -->
                 <label>Client auswählen</label>
@@ -164,10 +248,64 @@ a{
 
                 <!-- Zeitpunkt -->
                 <label>Zeitpunkt der Ausführung</label>
-                <input type="datetime-local"
-                       name="time_to_run"
-                       required>
+                <input type="date" 
+                id="date-input" 
+                name="date" 
+                value="{{ request.GET.date }}"
+                required>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const dateInput = document.getElementById('date-input');
+
+                    function updateUrl() {
+                        if (dateInput.value) {
+                            const url = new URL(window.location);
+                            url.searchParams.set('date', dateInput.value);
+                            // Ändert die URL in der Browserzeile, ohne die Seite neu zu laden
+                            window.history.pushState({}, '', url);
+                        }
+                    }
+
+                    // Reagiert auf Enter
+                    dateInput.addEventListener('keypress', function (e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault(); // Verhindert das Abschicken des ganzen Formulars
+                            updateUrl();
+                        }
+                    });
+
+                    // Reagiert auf Rausklicken (Blur) oder Tab
+                    dateInput.addEventListener('blur', updateUrl);
+                    
+                    // Reagiert auf direkte Auswahl im Kalender-Widget
+                    dateInput.addEventListener('change', updateUrl);
+                });
+            </script>
+            <label>Uhrzeit</label>
+            <input type="time" name="time">
+
+            <label>Wiederholung</label>
+            <select name="repetition">
+                <option value="None">
+                    Einmalig
+                </option>
+                <option value="daily">
+                    Täglich
+                </option>
+                <option value="weekly">
+                    Wöchentlich
+                </option>
+                <option value="2-weekly">
+                    Alle 2 Wochen                    
+                </option>
+                <option value="monthly">
+                    Monatlich
+                </option>
+                <option value="yearly">
+                    Jährlich
+                </option>
+            </select>
                 <!-- Aktiv -->
                 <label>Aktiv</label>
                 <select name="enabled">
@@ -211,7 +349,11 @@ a{
                     {% for job in jobs %}
                     <tr>
 
-                        <td>{{ job.id }}</td>
+                        <td>
+                            <a href="/jobs/{{ job.id }}/">
+                                {{ job.id }}
+                            </a>
+                        </td>
 
                         <td><a href="/tasks">{{ job.task_id }}</a></td>
 

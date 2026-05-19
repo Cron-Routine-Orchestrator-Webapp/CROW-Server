@@ -4,7 +4,7 @@ import django
 import calendar
 from datetime import datetime,date
 from .models import Job,Client,Task
-
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -38,7 +38,8 @@ def jobs(request):
                     enabled = request.POST.get("enabled"),
                     task_id = request.POST.get("task_id"),
                     client_id = request.POST.get("client_id"),
-                    time_to_run = request.POST.get("time_to_run"),
+                    time_to_run = f"{request.POST.get("date")} {request.POST.get("time")}",
+                    repeat = request.POST.get("repetition"),
                     last_task_status = request.POST.get("enabled")
                 )
             except django.db.utils.IntegrityError:
@@ -75,7 +76,7 @@ def tasks(request):
                     task_type=request.POST.get("job_type"),
                     task_data= {
                         "CMD" : request.POST.get("cmd_command"),
-                        "Shell_file": request.POST.get("shell_file"),
+                        "Shell_command": request.POST.get("shell_command"),
                         "ARGS" : [
                             
                         ],
@@ -182,4 +183,23 @@ def client_view(request):
     print(f"Clients: {Client.objects.all().values_list()}")
     return render(request, "clients.html", {
         "clients": Client.objects.all()
+    })
+
+
+
+
+def job_detail(request, job_id):
+
+    job = Job.objects.get(id=job_id)
+
+    return render(request, "job_detail.html", {
+        "job": job
+    })
+
+def task_detail(request, task_id):
+
+    task = get_object_or_404(Task, id=task_id)
+
+    return render(request, "task_detail.html", {
+        "task": task
     })

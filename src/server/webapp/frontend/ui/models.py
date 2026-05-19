@@ -11,6 +11,8 @@ class Job(models.Model):
 
     time_to_run = models.DateTimeField(null=False, blank=True,default=1)
 
+    repeat = models.CharField(null=True,default=None)
+
     last_run = models.DateTimeField(null=True, blank=True)
     
     last_task_status = models.CharField(max_length=50, null=True, blank=True)
