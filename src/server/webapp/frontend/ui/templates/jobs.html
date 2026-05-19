@@ -291,7 +291,10 @@ a{
                 <select id="task-select" name="task_id" required>
 
                     {% for task in tasks %}
-                        <option value="{{ task.id }}">
+                        <option
+                            value="{{ task.id }}"
+                            {% if task.id == selected_task %}selected{% endif %}
+                        >
                             {{ task.id }} | {{ task.job_type }}
                         </option>
                     {% endfor %}

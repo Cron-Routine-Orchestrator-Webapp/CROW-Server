@@ -6,6 +6,7 @@ from datetime import datetime, date
 from .models import Job, Client, Task
 from django.shortcuts import get_object_or_404
 import json
+from collections import defaultdict
 
 # Create your views here.
 
@@ -48,6 +49,16 @@ def jobs(request):
                         "error": "Eine Job unter diesem Namen existiert bereits! Siehe rechts!",
                     },
                 )
+    
+    selected_task = None
+
+
+    task_id = request.GET.get("task_id")
+
+
+    if task_id:
+        selected_task = task_id
+
 
     clients_list = list(Client.objects.all())
     tasks_list = list(Task.objects.all())
@@ -55,7 +66,9 @@ def jobs(request):
     return render(
         request,
         "jobs.html",
-        {"clients": clients_list, "tasks": tasks_list, "jobs": jobs_list},
+        {"clients": clients_list, "tasks": tasks_list, "jobs": jobs_list,
+        "selected_task": task_id,
+        },
     )
 
 
@@ -89,12 +102,14 @@ def tasks(request):
                     },
                 )
     tasks_list = list(Task.objects.all())
-    return render(request, "tasks.html", {"tasks": tasks_list})
+    return render(request, "tasks.html", {
+        "tasks": tasks_list, 
+        "created_task_id": request.POST.get("id")
+        }
+    )
 
 
-from collections import defaultdict
-from datetime import datetime, date
-import calendar
+
 
 
 def calendar_view(request):

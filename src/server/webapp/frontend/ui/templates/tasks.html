@@ -231,7 +231,24 @@ a{
                 </button>
 
             </form>
+            {% if created_task_id %}
 
+            <script>
+
+                const result = confirm(
+                    "Task erfolgreich erstellt.\n\nWillst du daraus jetzt einen Job erstellen?"
+                );
+
+                if (result) {
+
+                    window.location.href =
+                        "/jobs?task_id={{ created_task_id }}";
+
+                }
+
+            </script>
+
+            {% endif %}
         </div>
 
         <!-- TASK LISTE -->

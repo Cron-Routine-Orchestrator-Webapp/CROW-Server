@@ -11,7 +11,7 @@ from server.webapp.backend.helper.types import (
     Job as TypesJob,
     Task as TypesTask,
     TaskParameters,
-    Repeat,
+    Repeat
 )
 
 
@@ -85,6 +85,56 @@ class DatabaseBackend:
         return typed_tasks
 
 
+
+
+    def delete_job(self,job_id:str)-> None:
+        try:
+            job=Job.objects.get(id=job_id)
+            job.delete()
+            print(f"Successfully deleted Job: {job_id}")
+        except Job.DoesNotExist:
+            print(f"Job {job_id} was not found")
+
+    def delete_task(self,task_id:str)-> None:
+        try:
+            task=Task.objects.get(id=task_id)
+            task.delete()
+            print(f"Successfully deleted Task: {task_id}")
+        except Task.DoesNotExist:
+            print(f"Task {task_id} was not found")
+
+    def create_new_job(self,
+                       job_id:str,
+                       enabled:bool,
+                       task_id:str,
+                       client_id:str,
+                       date_to_run:str,
+                       time_to_run:str,
+                       repeat:str,
+                       last_task_status:str):
+        """
+        Format Date and Time as follows:\n
+        date =  "YYYY-MM-DD"\n
+        time =  "HH:MM"
+        """
+
+        try:
+            Job.objects.create(
+                    id=job_id,
+                    enabled=enabled,
+                    task_id=task_id,
+                    client_id=client_id,
+                    time_to_run=f"{date_to_run} {time_to_run}",
+                    repeat=repeat,
+                    last_task_status=last_task_status
+                )
+            print(f"Successfully created Job:  {job_id}")
+        except:
+            print("An error occured!")
+
+
+        
+
 def main() -> None:
     db_backend = DatabaseBackend()
     clients: list[TypesClient] = db_backend.get_clients()
@@ -97,4 +147,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    backend = DatabaseBackend()
+    backend.delete_job("Test7")
