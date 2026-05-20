@@ -14,7 +14,7 @@ def run_django():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", DJANGO_SETTINGS_MODULE)
 
     sys.argv = [
-        "/home/connor/documents/privat/GitHub/CROW/CROW-Server/dev/src/server/webapp/frontend/manage.py",
+        "./webapp/frontend/manage.py",
         "runserver",
         "0.0.0.0:8000",
     ]
