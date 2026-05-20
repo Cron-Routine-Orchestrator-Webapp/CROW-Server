@@ -3,10 +3,12 @@ from django.db import transaction
 import django
 import calendar
 from datetime import datetime, date
-from .models import Job, Client, Task
+from server.webapp.frontend.ui.models import Job, Client, Task
 from django.shortcuts import get_object_or_404
 import json
 from collections import defaultdict
+
+from server.webapp.frontend.database_backend import DatabaseBackend as backend
 
 # Create your views here.
 
@@ -49,16 +51,13 @@ def jobs(request):
                         "error": "Eine Job unter diesem Namen existiert bereits! Siehe rechts!",
                     },
                 )
-    
-    selected_task = None
 
+    selected_task = None
 
     task_id = request.GET.get("task_id")
 
-
     if task_id:
         selected_task = task_id
-
 
     clients_list = list(Client.objects.all())
     tasks_list = list(Task.objects.all())
@@ -66,8 +65,11 @@ def jobs(request):
     return render(
         request,
         "jobs.html",
-        {"clients": clients_list, "tasks": tasks_list, "jobs": jobs_list,
-        "selected_task": task_id,
+        {
+            "clients": clients_list,
+            "tasks": tasks_list,
+            "jobs": jobs_list,
+            "selected_task": task_id,
         },
     )
 
@@ -86,7 +88,7 @@ def tasks(request):
                     task_type=request.POST.get("job_type"),
                     task_data={
                         "CMD": request.POST.get("cmd_command"),
-                        "SHELL_CMD": request.POST.get("shell_command"),
+                        "SHELL_CMD": request.POST.get("Shell_command"),
                         "ARGS": [],
                         "PYTHON_FILE": request.POST.get("python_file"),
                         "PYTHON_EXE": request.POST.get("python_exec"),
@@ -102,14 +104,11 @@ def tasks(request):
                     },
                 )
     tasks_list = list(Task.objects.all())
-    return render(request, "tasks.html", {
-        "tasks": tasks_list, 
-        "created_task_id": request.POST.get("id")
-        }
+    return render(
+        request,
+        "tasks.html",
+        {"tasks": tasks_list, "created_task_id": request.POST.get("id")},
     )
-
-
-
 
 
 def calendar_view(request):
@@ -226,6 +225,28 @@ def client_view(request):
 
 
 def job_detail(request, job_id):
+    if request.method == "POST":
+        database_backend = backend()
+        # DELETE
+        if request.POST.get("delete_job"):
+            database_backend.delete_job(job_id)
+            return redirect("/jobs")
+
+        # TOGGLE ENABLED
+        if request.POST.get("toggle_enabled"):
+
+            enabled = request.POST.get("enabled")
+
+            if enabled == "true":
+
+                database_backend.update_job(job_id, field="enabled", value=True)
+
+            else:
+
+                database_backend.update_job(job_id, field="enabled", value=False)
+
+            return redirect(f"/jobs/{job_id}")
+
     print(job_id)
     job = Job.objects.get(id=job_id)
     print(job)

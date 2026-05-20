@@ -1,11 +1,14 @@
 import os
 import django
 import datetime
+from typing import Any, Literal
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "frontend.settings")
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE", "server.webapp.frontend.frontend.settings"
+)
 django.setup()
-
-from ui.models import Job, Client, Task
+from django.core.exceptions import ObjectDoesNotExist
+from server.webapp.frontend.ui.models import Job, Client, Task
 from server.webapp.backend.helper.types import (
     Client as TypesClient,
     Job as TypesJob,
@@ -39,7 +42,7 @@ class DatabaseBackend:
                 str,
                 str,
                 datetime.datetime,
-                str,
+                Literal["None", "daily", "weekly", "2-weekly", "monthly", "yearly"],
                 datetime.datetime | None,
                 str | None,
             ]
@@ -65,7 +68,7 @@ class DatabaseBackend:
             tuple[
                 str,
                 str | None,
-                dict[str, str | None] | None,
+                Any,
                 datetime.datetime,
                 datetime.datetime,
             ]
@@ -83,34 +86,33 @@ class DatabaseBackend:
             typed_tasks.append(typed_task)
         return typed_tasks
 
-
-
-
-    def delete_job(self,job_id:str)-> None:
+    def delete_job(self, job_id: str) -> None:
         try:
-            job=Job.objects.get(id=job_id)
+            job = Job.objects.get(id=job_id)
             job.delete()
             print(f"Successfully deleted Job: {job_id}")
-        except Job.DoesNotExist:
-            print(f"Job {job_id} was not found")
+        except Exception as e:
+            print(f"Fehler beim Aktualisieren: {e}")
 
-    def delete_task(self,task_id:str)-> None:
+    def delete_task(self, task_id: str) -> None:
         try:
-            task=Task.objects.get(id=task_id)
+            task = Task.objects.get(id=task_id)
             task.delete()
             print(f"Successfully deleted Task: {task_id}")
-        except Task.DoesNotExist:
-            print(f"Task {task_id} was not found")
+        except Exception as e:
+            print(f"Fehler beim Aktualisieren: {e}")
 
-    def create_new_job(self,
-                       job_id:str,
-                       enabled:bool,
-                       task_id:str,
-                       client_id:str,
-                       date_to_run:str,
-                       time_to_run:str,
-                       repeat:str,
-                       last_task_status:str):
+    def create_new_job(
+        self,
+        job_id: str,
+        enabled: bool,
+        task_id: str,
+        client_id: str,
+        date_to_run: str,
+        time_to_run: str,
+        repeat: str,
+        last_task_status: str,
+    ):
         """
         Format Date and Time as follows:\n
         date =  "YYYY-MM-DD"\n
@@ -119,20 +121,29 @@ class DatabaseBackend:
 
         try:
             Job.objects.create(
-                    id=job_id,
-                    enabled=enabled,
-                    task_id=task_id,
-                    client_id=client_id,
-                    time_to_run=f"{date_to_run} {time_to_run}",
-                    repeat=repeat,
-                    last_task_status=last_task_status
-                )
+                id=job_id,
+                enabled=enabled,
+                task_id=task_id,
+                client_id=client_id,
+                time_to_run=f"{date_to_run} {time_to_run}",
+                repeat=repeat,
+                last_task_status=last_task_status,
+            )
             print(f"Successfully created Job:  {job_id}")
         except:
             print("An error occured!")
 
+    def update_job(self, job_id: str, field: str, value: Any) -> None:
+        try:
+            job_to_update = Job.objects.get(id=job_id)
+            setattr(job_to_update, field, value)
+            job_to_update.save(update_fields=[field])
+            print(f"Job {job_id} updatet {field} to {value}!")
+        except ObjectDoesNotExist:
+            print(f"{job_id} does not exist!")
+        except Exception as e:
+            print(f"Fehler beim Aktualisieren: {e}")
 
-        
 
 def main() -> None:
     db_backend = DatabaseBackend()
@@ -147,4 +158,13 @@ def main() -> None:
 
 if __name__ == "__main__":
     backend = DatabaseBackend()
-    backend.delete_job("Test7")
+    backend.create_new_job(
+        job_id="Neuer_Job",
+        enabled=True,
+        task_id="test run",
+        client_id="linux-pc",
+        date_to_run="2026-05-20",
+        time_to_run="18:00",
+        repeat="daily",
+        last_task_status="",
+    )

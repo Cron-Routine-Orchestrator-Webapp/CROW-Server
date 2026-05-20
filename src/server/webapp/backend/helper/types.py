@@ -17,7 +17,7 @@ class Response(BaseModel):
     CODE: int
     PID: int
     ACTION_TYPE: str
-    OUTPUT: str
+    OUTPUT: str | None
 
 
 class Client(BaseModel):
@@ -37,12 +37,14 @@ class Job(BaseModel):
     LAST_RUN: datetime.datetime | None
     LAST_TASK_STATUS: str | None
 
+
 class TaskParameters(BaseModel):
-    CMD: str | None
-    SHELL_CMD: str | None
-    ARGS: list[str] | None
-    PYTHON_FILE: str | None
-    PYTHON_EXE: str | None
+    CMD: str | None = None
+    SHELL_CMD: str | None = None
+    ARGS: list[str] | None = None
+    PYTHON_FILE: str | None = None
+    PYTHON_EXE: str | None = None
+
 
 class Task(BaseModel):
     ID: str
@@ -50,5 +52,3 @@ class Task(BaseModel):
     TASK_PARAMETERS: TaskParameters
     CREATED_AT: datetime.datetime
     UPDATED_AT: datetime.datetime
-
-
