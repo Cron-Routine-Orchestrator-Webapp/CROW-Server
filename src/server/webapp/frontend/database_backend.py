@@ -11,7 +11,6 @@ from server.webapp.backend.helper.types import (
     Job as TypesJob,
     Task as TypesTask,
     TaskParameters,
-    Repeat
 )
 
 
@@ -40,7 +39,7 @@ class DatabaseBackend:
                 str,
                 str,
                 datetime.datetime,
-                Repeat,
+                str,
                 datetime.datetime | None,
                 str | None,
             ]
