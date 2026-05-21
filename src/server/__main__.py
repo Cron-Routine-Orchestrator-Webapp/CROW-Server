@@ -2,6 +2,7 @@ import os
 import sys
 import threading
 import time
+from pathlib import Path
 from django.core.management import execute_from_command_line
 
 DJANGO_SETTINGS_MODULE = "server.webapp.frontend.frontend.settings"
@@ -12,9 +13,12 @@ def run_django():
     Starts Django runserver in the main thread (blocking).
     """
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", DJANGO_SETTINGS_MODULE)
+    path_to_manage: str = os.path.join(
+            str(Path(__file__).resolve().parent), "webapp", "fronted", "manage.py"
+        )
 
     sys.argv = [
-        "./webapp/frontend/manage.py",
+        path_to_manage,
         "runserver",
         "0.0.0.0:8000",
     ]
