@@ -18,7 +18,7 @@ def run_django():
         )
 
     sys.argv = [
-        path_to_manage,
+        r"I:\Dokumente\Crow\CROW-Server\src\server\webapp\frontend\manage.py",
         "runserver",
         "0.0.0.0:8000",
     ]
