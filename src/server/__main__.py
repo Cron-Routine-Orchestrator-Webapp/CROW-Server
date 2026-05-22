@@ -14,11 +14,11 @@ def run_django():
     """
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", DJANGO_SETTINGS_MODULE)
     path_to_manage: str = os.path.join(
-            str(Path(__file__).resolve().parent), "webapp", "fronted", "manage.py"
-        )
+        str(Path(__file__).resolve().parent), "webapp", "frontend", "manage.py"
+    )
 
     sys.argv = [
-        r"I:\Dokumente\Crow\CROW-Server\src\server\webapp\frontend\manage.py",
+        path_to_manage,
         "runserver",
         "0.0.0.0:8000",
     ]
