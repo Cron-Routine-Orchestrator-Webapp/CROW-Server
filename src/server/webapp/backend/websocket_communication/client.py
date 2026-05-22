@@ -4,7 +4,7 @@ from ..helper.types import Request, Response
 
 class WebSocketClient:
     def __init__(self) -> None:
-        self.port: str = "5000"
+        self.port: str = "1237"
 
     def sending(self, data: Request, ip: str) -> Response:
         uri: str = f"ws://{ip}:{self.port}"
