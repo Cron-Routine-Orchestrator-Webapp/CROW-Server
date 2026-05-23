@@ -28,7 +28,7 @@ class CronClock:
 
     def run_job(self, job: Job) -> Response:
         task: Task | None = next((t for t in self.tasks if t.ID == job.TASK_ID), None)
-        self.pids.append(self.pids[-1] + 1 if self.pids else 0)  # Generate a new PID
+        self.pids.append(self.pids[-1] + 1 if self.pids else 100)  # Generate a new PID
         pid: int = self.pids[-1]
         if task is None:
             raise ValueError(f"Task with ID {job.TASK_ID} not found for Job {job.ID}")
