@@ -129,15 +129,15 @@ def calendar_view(request):
     month_start = datetime(year, month, 1, 0, 0)
     month_end = datetime(year, month, num_days, 23, 59, 59)
 
-    # 🔥 Jobs im Zeitraum holen
+    # Jobs im Zeitraum holen
     jobs = Job.objects.filter(time_to_run__gte=month_start, time_to_run__lte=month_end)
 
-    # 🔥 nach DATE gruppieren
+    # nach DATE gruppieren
     jobs_by_date = defaultdict(list)
 
     for job in jobs:
 
-        job_date = job.time_to_run.date()  # 🔑 WICHTIG
+        job_date = job.time_to_run.date()  # WICHTIG
 
         jobs_by_date[job_date].append(
             {
@@ -146,7 +146,7 @@ def calendar_view(request):
                 "status": ("Aktiv" if job.enabled else "Deaktiviert"),
             }
         )
-
+    jobs_by_date.sort()
     # Kalender bauen
     calendar_days = []
 
