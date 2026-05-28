@@ -5,6 +5,7 @@ WORKDIR /app
 # system basics (verhindert typische build errors)
 RUN apt-get update && apt-get install -y \
     curl \
+    iputils-ping \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
