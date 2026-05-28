@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  crow-server:
+    build: .
+
+    container_name: crow-server
+
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      USE_DOCKER: "1"
+      DB_PATH: /data/db.sqlite3
+      SECRET_KEY: change-me
+      DEBUG: "0"
+      ALLOWED_HOSTS: "*"
+
+    volumes:
+      - ./data:/data

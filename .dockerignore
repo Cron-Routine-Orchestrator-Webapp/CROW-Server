@@ -1,0 +1,8 @@
+.git
+.github
+__pycache__
+*.sqlite3
+data
+.venv
+dist
+build
