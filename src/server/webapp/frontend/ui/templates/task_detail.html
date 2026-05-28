@@ -155,41 +155,47 @@ h2 {
 
         {% for key, value in task_data.items %}
 
-            <div class="json-item">
+    {% if value %}
 
-                <span class="json-key">{{ key }}</span>
+    <div class="json-item">
 
-                {% if value is dict %}
+        <span class="json-key">{{ key }}</span>
 
-                    <div class="json-inner">
-                        {% for k, v in value.items %}
-                            {% if not v %}
-                            <div class="json-value">
-                                <b>{{ k }}:</b> <p>Hier: {{ k }}</p>{{ v }}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+        {% if value is dict %}
 
-                {% elif value is list %}
-
-                    <div class="json-inner">
-                        {% for item in value %}
-                            <div class="json-value">• {{ item }}</div>
-                        {% endfor %}
-                    </div>
-
-                {% else %}
-
-                    <div class="json-value">
-                        {{ value }}
-                    </div>
-
-                {% endif %}
-
+            <div class="json-inner">
+                {% for k, v in value.items %}
+                    {% if v %}
+                        <div class="json-value">
+                            <b>{{ k }}:</b> {{ v }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
 
-        {% endfor %}
+        {% elif value is list %}
+
+            <div class="json-inner">
+                {% for item in value %}
+                    {% if item %}
+                        <div class="json-value">• {{ item }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        {% else %}
+
+            <div class="json-value">
+                {{ value }}
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+{% endfor %}
 
     </div>
 

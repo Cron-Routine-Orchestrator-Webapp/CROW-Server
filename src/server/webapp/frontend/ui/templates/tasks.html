@@ -282,21 +282,6 @@ a{
                 </div>
             </div>
 
-            <!-- PREVIEW (WICHTIG!) -->
-            <div class="task-preview">
-
-                {% if task.task_data %}
-                    <div class="preview-box">
-                        {{ task.task_data|truncatechars:120 }}
-                    </div>
-                {% else %}
-                    <div class="preview-box empty">
-                        Kein Preview verfügbar
-                    </div>
-                {% endif %}
-
-            </div>
-
             <!-- ACTION -->
             <div class="task-actions">
                 <a class="open-btn" href="/tasks/{{ task.id }}">

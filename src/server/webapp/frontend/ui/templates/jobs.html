@@ -239,6 +239,15 @@ a{
 .open-btn:hover {
     background: #2980b9;
 }
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header a:hover {
+    color: #dcdde1;
+}
 </style>
 </head>
 <body>
@@ -428,13 +437,7 @@ a{
                 <div><b>Client:</b> {{ job.client_id }}</div>
             </div>
 
-            <!-- PREVIEW -->
-            <div class="job-preview">
-                <div class="preview-box">
-                    Geplanter Job: {{ job.id }}<br>
-                    Status: {% if job.enabled %}aktiv{% else %}inaktiv{% endif %}
-                </div>
-            </div>
+
 
             <!-- ACTION -->
             <div class="job-actions">

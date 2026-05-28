@@ -250,7 +250,9 @@ def job_detail(request, job_id):
     print(job_id)
     job = Job.objects.get(id=job_id)
     print(job)
-    return render(request, "job_detail.html", {"job": job})
+    client_name = Client.objects.get(id=job.client_id).name
+    client_ip = Client.objects.get(id=job.client_id).ip
+    return render(request, "job_detail.html", {"job": job, "client_name": client_name, "client_ip": client_ip})
 
 
 def task_detail(request, task_id):
