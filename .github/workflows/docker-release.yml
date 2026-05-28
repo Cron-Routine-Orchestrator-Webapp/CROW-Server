@@ -30,15 +30,3 @@ jobs:
         run: |
           docker push ghcr.io/cron-routine-orchestrator-webapp/crow-server:${{ github.event.release.tag_name }}
           docker push ghcr.io/cron-routine-orchestrator-webapp/crow-server:latest
-
-  artifacts:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Upload compose + install script
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            docker-compose.yml
