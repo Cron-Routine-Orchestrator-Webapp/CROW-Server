@@ -163,9 +163,11 @@ h2 {
 
                     <div class="json-inner">
                         {% for k, v in value.items %}
+                            {% if v is none %}
                             <div class="json-value">
                                 <b>{{ k }}:</b> {{ v }}
                             </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
 
