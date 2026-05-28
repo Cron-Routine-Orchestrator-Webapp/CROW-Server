@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   crow-server:
-    build: .
+    image: ghcr.io/cron-routine-orchestrator-webapp/crow-server:latest
 
     container_name: crow-server
 
@@ -14,7 +14,7 @@ services:
     environment:
       USE_DOCKER: "1"
       DB_PATH: /data/db.sqlite3
-      SECRET_KEY: change-me
+      SECRET_KEY: "django-insecure-8orjtc^_c$t03$m(8sry8(6#xny77ad^-%ur16gygdw!j#6=c("
       DEBUG: "0"
       ALLOWED_HOSTS: "*"
 
