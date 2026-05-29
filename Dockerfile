@@ -22,7 +22,7 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-EXPOSE 8000
+EXPOSE 4040
 
 # entry via your django project
 CMD ["uv", "run", "server"]

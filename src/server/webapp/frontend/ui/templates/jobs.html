@@ -1,111 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>CROW - Job Manager</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
 
     <style>
-        body {
-            color: black;
-        }
+      body {
+        color: black;
+      }
 
+      .job-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input,
+      select,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      button {
+        background: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background: #2980b9;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table th,
+      table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
+
+      .badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+        display: inline-block;
+      }
+
+      .active {
+        background: #2ecc71;
+      }
+
+      .stopped {
+        background: #e74c3c;
+      }
+
+      @media (max-width: 900px) {
         .job-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+          grid-template-columns: 1fr;
         }
+      }
+      .error {
+        color: rgb(196, 25, 25);
+        font-size: small;
+      }
+      nav a {
+        color: #dcdde1;
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 14px;
+      }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+      nav a:hover {
+        color: white;
+      }
 
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #2980b9;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table th,
-        table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            display: inline-block;
-        }
-
-        .active {
-            background: #2ecc71;
-        }
-
-        .stopped {
-            background: #e74c3c;
-        }
-
-        @media(max-width: 900px) {
-            .job-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        .error{
-            color: rgb(196, 25, 25);
-            font-size: small;
-        }
-        nav a {
-    color: #dcdde1;
-    margin-right: 15px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-nav a:hover {
-    color: white;
-}
-
-a{
-    text-decoration: none;
-    color: black;
-}
+      a {
+        text-decoration: none;
+        color: black;
+      }
     </style>
     <style>
-    .crow-btn {
-
+      .crow-btn {
         background: #3498db;
         color: white;
 
@@ -119,346 +121,295 @@ a{
 
         cursor: pointer;
 
-        transition: 
-            background 0.2s ease,
-            transform 0.15s ease,
-            box-shadow 0.2s ease;
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
 
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
 
-    .crow-btn:hover {
-
+      .crow-btn:hover {
         background: #2980b9;
 
         transform: translateY(-1px);
 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
 
-    .crow-btn:active {
-
+      .crow-btn:active {
         transform: scale(0.98);
-    }
+      }
 
-    .crow-btn:disabled {
-
+      .crow-btn:disabled {
         background: #95a5a6;
         cursor: not-allowed;
         box-shadow: none;
-    }
-    .field-header {
+      }
+      .field-header {
+        display: flex;
 
-    display: flex;
+        justify-content: space-between;
 
-    justify-content: space-between;
+        align-items: center;
 
-    align-items: center;
+        margin-bottom: 8px;
+      }
 
-    margin-bottom: 8px;
-}
+      .small-btn {
+        width: auto;
 
-.small-btn {
+        padding: 8px 14px;
 
-    width: auto;
+        font-size: 13px;
 
-    padding: 8px 14px;
+        text-decoration: none;
 
-    font-size: 13px;
+        display: inline-flex;
 
-    text-decoration: none;
+        align-items: center;
 
-    display: inline-flex;
+        justify-content: center;
+      }
+      .job-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
 
-    align-items: center;
+      .job-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-    justify-content: center;
-}
-.job-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
+      .job-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-.job-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.08);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+      .job-id {
+        font-weight: bold;
+        color: #2f3640;
+        text-decoration: none;
+      }
 
-.job-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+      .job-id:hover {
+        color: #3498db;
+      }
 
-.job-id {
-    font-weight: bold;
-    color: #2f3640;
-    text-decoration: none;
-}
+      .job-meta {
+        font-size: 13px;
+        color: #57606f;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
-.job-id:hover {
-    color: #3498db;
-}
+      .job-preview {
+        background: #f5f6fa;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #2f3640;
+      }
 
-.job-meta {
-    font-size: 13px;
-    color: #57606f;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+      .job-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
 
-.job-preview {
-    background: #f5f6fa;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    color: #2f3640;
-}
+      .open-btn {
+        background: #3498db;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        text-decoration: none;
+      }
 
-.job-actions {
-    display: flex;
-    justify-content: flex-end;
-}
+      .open-btn:hover {
+        background: #2980b9;
+      }
+      header a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
 
-.open-btn {
-    background: #3498db;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    text-decoration: none;
-}
+      header a:hover {
+        color: #dcdde1;
+      }
+    </style>
+  </head>
+  <body>
+    <header><a href="/">CROW</a> - Job Manager</header>
 
-.open-btn:hover {
-    background: #2980b9;
-}
-header a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/clients">Clients</a>
+      <a href="/calendar">Kalender</a>
+    </nav>
 
-header a:hover {
-    color: #dcdde1;
-}
-</style>
-</head>
-<body>
-
-<header>
-    <a href="/">CROW</a> - Job Manager
-</header>
-
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/jobs">Jobs</a>
-    <a href="/tasks">Tasks</a>
-    <a href="/clients">Clients</a>
-    <a href="/calendar">Kalender</a>
-</nav>
-
-<div class="container">
-
-    <div class="job-grid">
-
+    <div class="container">
+      <div class="job-grid">
         <!-- Formular -->
         <div class="card">
+          <h2>Neuen Job erstellen</h2>
 
-            <h2>Neuen Job erstellen</h2>
+          <form method="post">
+            {% csrf_token %}
 
-            <form method="post">
-                {% csrf_token %}
+            <!-- Job ID -->
+            <label>Job ID</label>
+            <p class="error">{{error}}</p>
+            <input
+              type="text"
+              name="id"
+              placeholder="z.B. nightly_backup_job"
+              required
+            />
 
-                <!-- Job ID -->
-                <label>Job ID</label>
-                <p class="error">{{error}}</p>
-                <input type="text"
-                       name="id"
-                       placeholder="z.B. nightly_backup_job"
-                       required>
+            <!-- Task auswählen -->
+            <div class="field-header">
+              <label for="task-select"> Task auswählen </label>
 
-                <!-- Task auswählen -->
-                <div class="field-header">
+              <a href="/tasks/" class="crow-btn small-btn"> + Neue Task </a>
+            </div>
 
-                    <label for="task-select">
-                        Task auswählen
-                    </label>
+            <select id="task-select" name="task_id" required>
+              {% for task in tasks %}
+              <option
+                value="{{ task.id }}"
+                {%
+                if
+                task.id=""
+                ="selected_task"
+                %}selected{%
+                endif
+                %}
+              >
+                {{ task.id }} | {{ task.job_type }}
+              </option>
+              {% endfor %}
+            </select>
 
-                    <a href="/tasks/" class="crow-btn small-btn">
-                        + Neue Task
-                    </a>
+            <!-- Client auswählen -->
+            <label>Client auswählen</label>
+            <select name="client_id" required>
+              {% for client in clients %}
+              <option value="{{ client.id }}">
+                {{ client.name }} | {{ client.ip }} | {{ client.os }}
+              </option>
+              {% endfor %}
+            </select>
 
-                </div>
-
-                <select id="task-select" name="task_id" required>
-
-                    {% for task in tasks %}
-                        <option
-                            value="{{ task.id }}"
-                            {% if task.id == selected_task %}selected{% endif %}
-                        >
-                            {{ task.id }} | {{ task.job_type }}
-                        </option>
-                    {% endfor %}
-
-                </select>
-
-
-                <!-- Client auswählen -->
-                <label>Client auswählen</label>
-                <select name="client_id" required>
-
-                    {% for client in clients %}
-                    <option value="{{ client.id }}">
-                        {{ client.name }} | {{ client.ip }} | {{ client.os }}
-                    </option>
-                    {% endfor %}
-
-                </select>
-
-                <!-- Zeitpunkt -->
-                <label>Zeitpunkt der Ausführung</label>
-                <input type="date" 
-                id="date-input" 
-                name="date" 
-                value="{{ request.GET.date }}"
-                required>
+            <!-- Zeitpunkt -->
+            <label>Zeitpunkt der Ausführung</label>
+            <input
+              type="date"
+              id="date-input"
+              name="date"
+              value="{{ request.GET.date }}"
+              required
+            />
 
             <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const dateInput = document.getElementById('date-input');
+              document.addEventListener("DOMContentLoaded", function () {
+                const dateInput = document.getElementById("date-input");
 
-                    function updateUrl() {
-                        if (dateInput.value) {
-                            const url = new URL(window.location);
-                            url.searchParams.set('date', dateInput.value);
-                            // Ändert die URL in der Browserzeile, ohne die Seite neu zu laden
-                            window.history.pushState({}, '', url);
-                        }
-                    }
+                function updateUrl() {
+                  if (dateInput.value) {
+                    const url = new URL(window.location);
+                    url.searchParams.set("date", dateInput.value);
+                    // Ändert die URL in der Browserzeile, ohne die Seite neu zu laden
+                    window.history.pushState({}, "", url);
+                  }
+                }
 
-                    // Reagiert auf Enter
-                    dateInput.addEventListener('keypress', function (e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault(); // Verhindert das Abschicken des ganzen Formulars
-                            updateUrl();
-                        }
-                    });
-
-                    // Reagiert auf Rausklicken (Blur) oder Tab
-                    dateInput.addEventListener('blur', updateUrl);
-                    
-                    // Reagiert auf direkte Auswahl im Kalender-Widget
-                    dateInput.addEventListener('change', updateUrl);
+                // Reagiert auf Enter
+                dateInput.addEventListener("keypress", function (e) {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // Verhindert das Abschicken des ganzen Formulars
+                    updateUrl();
+                  }
                 });
+
+                // Reagiert auf Rausklicken (Blur) oder Tab
+                dateInput.addEventListener("blur", updateUrl);
+
+                // Reagiert auf direkte Auswahl im Kalender-Widget
+                dateInput.addEventListener("change", updateUrl);
+              });
             </script>
             <label>Uhrzeit | UTC</label>
-            <input type="time" name="time">
+            <input type="time" name="time" />
 
             <label>Wiederholung</label>
             <select name="repetition">
-                <option value="None">
-                    Einmalig
-                </option>
-                <option value="daily">
-                    Täglich
-                </option>
-                <option value="weekly">
-                    Wöchentlich
-                </option>
-                <option value="2-weekly">
-                    Alle 2 Wochen                    
-                </option>
-                <option value="monthly">
-                    Monatlich
-                </option>
-                <option value="yearly">
-                    Jährlich
-                </option>
+              <option value="None">Einmalig</option>
+              <option value="daily">Täglich</option>
+              <option value="weekly">Wöchentlich</option>
+              <option value="2-weekly">Alle 2 Wochen</option>
+              <option value="monthly">Monatlich</option>
+              <option value="yearly">Jährlich</option>
             </select>
-                <!-- Aktiv -->
-                <label>Aktiv</label>
-                <select name="enabled">
+            <!-- Aktiv -->
+            <label>Aktiv</label>
+            <select name="enabled">
+              <option value="True">Ja</option>
 
-                    <option value="True">
-                        Ja
-                    </option>
+              <option value="False">Nein</option>
+            </select>
 
-                    <option value="False">
-                        Nein
-                    </option>
-
-                </select>
-
-                <button type="submit">
-                    Job speichern
-                </button>
-
-            </form>
-
+            <button type="submit">Job speichern</button>
+          </form>
         </div>
 
         <!-- Übersicht -->
         <div class="card">
+          <h2>Vorhandene Jobs</h2>
 
-    <h2>Vorhandene Jobs</h2>
+          <div class="job-list">
+            {% for job in jobs %}
 
-    <div class="job-list">
-
-        {% for job in jobs %}
-
-        <div class="job-card">
-
-            <!-- HEADER -->
-            <div class="job-header">
-
-                <a class="job-id" href="/jobs/{{ job.id }}">
-                    {{ job.id }}
-                </a>
+            <div class="job-card">
+              <!-- HEADER -->
+              <div class="job-header">
+                <a class="job-id" href="/jobs/{{ job.id }}"> {{ job.id }} </a>
 
                 {% if job.enabled %}
-                    <span class="badge active">Aktiv</span>
+                <span class="badge active">Aktiv</span>
                 {% else %}
-                    <span class="badge stopped">Deaktiviert</span>
+                <span class="badge stopped">Deaktiviert</span>
                 {% endif %}
+              </div>
 
-            </div>
-
-            <!-- META -->
-            <div class="job-meta">
+              <!-- META -->
+              <div class="job-meta">
                 <div><b>Task:</b> {{ job.task_id }}</div>
                 <div><b>Client:</b> {{ job.client_id }}</div>
+              </div>
+
+              <!-- ACTION -->
+              <div class="job-actions">
+                <a class="open-btn" href="/jobs/{{ job.id }}"> Öffnen → </a>
+              </div>
             </div>
 
-
-
-            <!-- ACTION -->
-            <div class="job-actions">
-                <a class="open-btn" href="/jobs/{{ job.id }}">
-                    Öffnen →
-                </a>
-            </div>
-
-        </div>
-
-        {% empty %}
+            {% empty %}
             <p>Keine Jobs vorhanden</p>
-        {% endfor %}
-
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
-
-</div>
-
-    </div>
-
-</div>
-
-</body>
+  </body>
 </html>

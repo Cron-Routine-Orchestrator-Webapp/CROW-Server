@@ -1,205 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>Task {{ task.id }}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task {{ task.id }}</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
 
+    <style>
+      body {
+        margin: 0;
+        color: black;
+        background: #f5f6fa;
+        font-family: Arial, sans-serif;
+      }
 
+      /* HEADER / NAV (gleich wie Job Manager) */
+      header {
+        background: #2f3640;
+        color: white;
+        padding: 15px 20px;
+        font-size: 20px;
+      }
 
-<style>
-body {
-    margin: 0;
-    color: black;
-    background: #f5f6fa;
-    font-family: Arial, sans-serif;
-}
+      nav {
+        background: #353b48;
+        padding: 10px 20px;
+      }
 
-/* HEADER / NAV (gleich wie Job Manager) */
-header {
-    background: #2f3640;
-    color: white;
-    padding: 15px 20px;
-    font-size: 20px;
-}
+      nav a {
+        color: #dcdde1;
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 14px;
+      }
 
-nav {
-    background: #353b48;
-    padding: 10px 20px;
-}
+      nav a:hover {
+        color: white;
+      }
 
-nav a {
-    color: #dcdde1;
-    margin-right: 15px;
-    text-decoration: none;
-    font-size: 14px;
-}
+      /* LAYOUT */
+      .container {
+        padding: 20px;
+      }
 
-nav a:hover {
-    color: white;
-}
+      /* CARDS (identisch zum Job Manager) */
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
 
-/* LAYOUT */
-.container {
-    padding: 20px;
-}
+      /* BADGE */
+      .badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+        background: #3498db;
+        display: inline-block;
+      }
 
-/* CARDS (identisch zum Job Manager) */
-.card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
+      /* META */
+      .meta-grid {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 14px;
+      }
 
-/* BADGE */
-.badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    color: white;
-    background: #3498db;
-    display: inline-block;
-}
+      /* JSON UI */
+      .json-item {
+        border: 1px solid #eee;
+        border-left: 4px solid #3498db;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: #fafafa;
+      }
 
-/* META */
-.meta-grid {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 8px;
-    margin-top: 10px;
-    font-size: 14px;
-}
+      .json-key {
+        font-weight: bold;
+        color: #2f3640;
+        margin-bottom: 6px;
+        display: block;
+      }
 
-/* JSON UI */
-.json-item {
-    border: 1px solid #eee;
-    border-left: 4px solid #3498db;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-    background: #fafafa;
-}
+      .json-value {
+        color: #57606f;
+        font-size: 14px;
+        word-break: break-word;
+      }
 
-.json-key {
-    font-weight: bold;
-    color: #2f3640;
-    margin-bottom: 6px;
-    display: block;
-}
+      .json-inner {
+        margin-top: 8px;
+        padding-left: 12px;
+        border-left: 2px dashed #dcdde1;
+      }
 
-.json-value {
-    color: #57606f;
-    font-size: 14px;
-    word-break: break-word;
-}
+      /* TYPO */
+      h2 {
+        margin-top: 0;
+      }
 
-.json-inner {
-    margin-top: 8px;
-    padding-left: 12px;
-    border-left: 2px dashed #dcdde1;
-}
+      .page-title {
+        font-size: 22px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
 
-/* TYPO */
-h2 {
-    margin-top: 0;
-}
+  <body>
+    <header>CROW - Task Viewer</header>
 
-.page-title {
-    font-size: 22px;
-    font-weight: bold;
-}
+    <nav>
+      <a href="/tasks"><- Back</a>
+    </nav>
 
-</style>
-
-</head>
-
-<body>
-
-<header>
-    CROW - Task Viewer
-</header>
-
-<nav>
-    <a href="/tasks"><- Back</a>
-
-</nav>
-
-<div class="container">
-
-    <!-- TASK INFO -->
-    <div class="card">
-
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="page-title">Task {{ task.id }}</div>
-            <span class="badge">{{ task.task_type }}</span>
+    <div class="container">
+      <!-- TASK INFO -->
+      <div class="card">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div class="page-title">Task {{ task.id }}</div>
+          <span class="badge">{{ task.task_type }}</span>
         </div>
 
         <div class="meta-grid">
-            <div><b>ID</b></div>
-            <div>{{ task.id }}</div>
+          <div><b>ID</b></div>
+          <div>{{ task.id }}</div>
 
-            <div><b>Typ</b></div>
-            <div>{{ task.task_type }}</div>
+          <div><b>Typ</b></div>
+          <div>{{ task.task_type }}</div>
         </div>
+      </div>
 
-    </div>
-
-    <!-- TASK DATA -->
-    <div class="card">
-
+      <!-- TASK DATA -->
+      <div class="card">
         <h2>Task Data</h2>
 
-        {% for key, value in task_data.items %}
+        {% for key, value in task_data.items %} {% if value %}
 
-    {% if value %}
+        <div class="json-item">
+          <span class="json-key">{{ key }}</span>
 
-    <div class="json-item">
+          {% if value is dict %}
 
-        <span class="json-key">{{ key }}</span>
+          <div class="json-inner">
+            {% for k, v in value.items %} {% if v %}
+            <div class="json-value"><b>{{ k }}:</b> {{ v }}</div>
+            {% endif %} {% endfor %}
+          </div>
 
-        {% if value is dict %}
+          {% elif value is list %}
 
-            <div class="json-inner">
-                {% for k, v in value.items %}
-                    {% if v %}
-                        <div class="json-value">
-                            <b>{{ k }}:</b> {{ v }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+          <div class="json-inner">
+            {% for item in value %} {% if item %}
+            <div class="json-value">• {{ item }}</div>
+            {% endif %} {% endfor %}
+          </div>
 
-        {% elif value is list %}
+          {% else %}
 
-            <div class="json-inner">
-                {% for item in value %}
-                    {% if item %}
-                        <div class="json-value">• {{ item }}</div>
-                    {% endif %}
-                {% endfor %}
-            </div>
+          <div class="json-value">{{ value }}</div>
 
-        {% else %}
+          {% endif %}
+        </div>
 
-            <div class="json-value">
-                {{ value }}
-            </div>
-
-        {% endif %}
-
+        {% endif %} {% endfor %}
+      </div>
     </div>
-
-    {% endif %}
-
-{% endfor %}
-
-    </div>
-
-</div>
-
-</body>
+  </body>
 </html>

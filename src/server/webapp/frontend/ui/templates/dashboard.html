@@ -1,219 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>CROW - Dashboard</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
 
     <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        color: #2c3e50;
+      }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            color: #2c3e50;
-        }
+      header {
+        background: #1f2937;
+        color: white;
+        padding: 20px 40px;
+        font-size: 28px;
+        font-weight: bold;
+      }
 
-        header {
-            background: #1f2937;
-            color: white;
-            padding: 20px 40px;
-            font-size: 28px;
-            font-weight: bold;
-        }
+      nav {
+        background: #111827;
+        padding: 15px 40px;
+      }
 
-        nav {
-            background: #111827;
-            padding: 15px 40px;
-        }
+      nav a {
+        color: #d1d5db;
+        text-decoration: none;
+        margin-right: 20px;
+        font-size: 15px;
+      }
 
-        nav a {
-            color: #d1d5db;
-            text-decoration: none;
-            margin-right: 20px;
-            font-size: 15px;
-        }
+      nav a:hover {
+        color: white;
+      }
 
-        nav a:hover {
-            color: white;
-        }
+      .container {
+        padding: 40px;
+      }
 
-        .container {
-            padding: 40px;
-        }
+      .hero {
+        background: linear-gradient(135deg, #3498db, #2563eb);
+        color: white;
+        padding: 40px;
+        border-radius: 18px;
+        margin-bottom: 30px;
+      }
 
-        .hero {
-            background: linear-gradient(135deg, #3498db, #2563eb);
-            color: white;
-            padding: 40px;
-            border-radius: 18px;
-            margin-bottom: 30px;
-        }
+      .hero h1 {
+        margin-top: 0;
+        font-size: 40px;
+      }
 
-        .hero h1 {
-            margin-top: 0;
-            font-size: 40px;
-        }
+      .hero p {
+        font-size: 18px;
+        opacity: 0.95;
+      }
 
-        .hero p {
-            font-size: 18px;
-            opacity: 0.95;
-        }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-        }
+      .card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: 0.2s ease;
+      }
 
-            transition: 0.2s ease;
-        }
+      .card:hover {
+        transform: translateY(-4px);
+      }
 
-        .card:hover {
-            transform: translateY(-4px);
-        }
+      .card h2 {
+        margin-top: 0;
+      }
 
-        .card h2 {
-            margin-top: 0;
-        }
+      .card p {
+        color: #555;
+        line-height: 1.5;
+      }
 
-        .card p {
-            color: #555;
-            line-height: 1.5;
-        }
+      .card a {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 16px;
+        background: #3498db;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+      }
 
-        .card a {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 16px;
-            background: #3498db;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
+      .card a:hover {
+        background: #2563eb;
+      }
 
-        .card a:hover {
-            background: #2563eb;
-        }
-
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-        }
-
+      .footer {
+        margin-top: 40px;
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <header>CROW - Dashboard</header>
 
-<header>
-    CROW - Dashboard
-</header>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/clients">Clients</a>
+      <a href="/calendar">Kalender</a>
+    </nav>
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/jobs">Jobs</a>
-    <a href="/tasks">Tasks</a>
-    <a href="/clients">Clients</a>
-    <a href="/calendar">Kalender</a>
-</nav>
-
-<div class="container">
-
-    <div class="hero">
+    <div class="container">
+      <div class="hero">
         <h1>CROW Server Orchestrator</h1>
 
         <p>
-            Verwaltung von automatisierten Tasks, Clients und geplanten Jobs
-            über ein zentrales Webinterface.
+          Verwaltung von automatisierten Tasks, Clients und geplanten Jobs über
+          ein zentrales Webinterface.
         </p>
-    </div>
+      </div>
 
-    <div class="grid">
-
+      <div class="grid">
         <!-- Jobs -->
         <div class="card">
+          <h2>⚙ Jobs</h2>
 
-            <h2>⚙ Jobs</h2>
+          <p>
+            Erstelle und verwalte geplante Ausführungen für Tasks auf
+            verbundenen Clients.
+          </p>
 
-            <p>
-                Erstelle und verwalte geplante Ausführungen für Tasks
-                auf verbundenen Clients.
-            </p>
-
-            <a href="/jobs">
-                Jobs öffnen
-            </a>
-
+          <a href="/jobs"> Jobs öffnen </a>
         </div>
 
         <!-- Tasks -->
         <div class="card">
+          <h2>🧩 Tasks</h2>
 
-            <h2>🧩 Tasks</h2>
+          <p>
+            Definiere Python-Skripte, Shell-Commands oder CMD-Befehle als
+            wiederverwendbare Tasks.
+          </p>
 
-            <p>
-                Definiere Python-Skripte, Shell-Commands oder CMD-Befehle
-                als wiederverwendbare Tasks.
-            </p>
-
-            <a href="/tasks">
-                Tasks öffnen
-            </a>
-
+          <a href="/tasks"> Tasks öffnen </a>
         </div>
 
         <!-- Clients -->
         <div class="card">
+          <h2>💻 Clients</h2>
 
-            <h2>💻 Clients</h2>
+          <p>
+            Verwalte registrierte Systeme, Server und Zielgeräte innerhalb
+            deiner Infrastruktur.
+          </p>
 
-            <p>
-                Verwalte registrierte Systeme, Server und Zielgeräte
-                innerhalb deiner Infrastruktur.
-            </p>
-
-            <a href="/clients">
-                Clients öffnen
-            </a>
-
+          <a href="/clients"> Clients öffnen </a>
         </div>
 
         <!-- Kalender -->
         <div class="card">
+          <h2>📅 Kalender</h2>
 
-            <h2>📅 Kalender</h2>
+          <p>
+            Übersicht aller geplanten Jobs und zukünftigen Ausführungen in einer
+            Kalenderansicht.
+          </p>
 
-            <p>
-                Übersicht aller geplanten Jobs und zukünftigen Ausführungen
-                in einer Kalenderansicht.
-            </p>
-
-            <a href="/calendar">
-                Kalender öffnen
-            </a>
-
+          <a href="/calendar"> Kalender öffnen </a>
         </div>
+      </div>
 
+      <div class="footer">CROW • Cron Routine Orchestrator Webapp</div>
     </div>
-
-    <div class="footer">
-        CROW • Cron Routine Orchestrator Webapp
-    </div>
-
-</div>
-
-</body>
+  </body>
 </html>

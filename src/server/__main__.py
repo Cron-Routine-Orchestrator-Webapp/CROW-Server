@@ -16,17 +16,14 @@ def run_django():
     path_to_manage: str = os.path.join(
         str(Path(__file__).resolve().parent), "webapp", "frontend", "manage.py"
     )
-    sys.argv = [
-        path_to_manage,
-        "migrate"
-    ]
+    sys.argv = [path_to_manage, "migrate"]
 
     execute_from_command_line(sys.argv)
-    
+
     sys.argv = [
         path_to_manage,
         "runserver",
-        "0.0.0.0:8000",
+        "0.0.0.0:4040",
     ]
 
     execute_from_command_line(sys.argv)

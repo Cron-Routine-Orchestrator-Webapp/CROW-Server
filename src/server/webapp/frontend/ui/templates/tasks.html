@@ -1,420 +1,349 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>CROW - Task Manager</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
 
     <style>
+      body {
+        color: black;
+      }
 
-        body {
-            color: black;
-        }
+      .task-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
 
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input,
+      select,
+      textarea,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 8px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      button {
+        background: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background: #2980b9;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table th,
+      table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
+
+      @media (max-width: 900px) {
         .task-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+          grid-template-columns: 1fr;
         }
+      }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+      .error {
+        color: rgb(196, 25, 25);
+        font-size: small;
+      }
+      nav a {
+        color: #dcdde1;
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 14px;
+      }
 
-        input,
-        select,
-        textarea,
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 8px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
+      nav a:hover {
+        color: white;
+      }
 
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
+      a {
+        text-decoration: none;
+      }
+      .task-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
 
-        button:hover {
-            background: #2980b9;
-        }
+      .task-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-        table th,
-        table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
+      .task-id {
+        font-weight: bold;
+        color: #2f3640;
+        text-decoration: none;
+      }
 
-        @media(max-width: 900px) {
+      .task-id:hover {
+        color: #3498db;
+      }
 
-            .task-grid {
-                grid-template-columns: 1fr;
-            }
+      .task-meta {
+        font-size: 12px;
+        color: #7f8c8d;
+      }
 
-        }
+      .task-preview {
+        font-size: 13px;
+        color: #2f3640;
+      }
 
-        .error{
-            color: rgb(196, 25, 25);
-            font-size: small;
-        }
-        nav a {
-    color: #dcdde1;
-    margin-right: 15px;
-    text-decoration: none;
-    font-size: 14px;
-}
+      .preview-box {
+        background: #f5f6fa;
+        padding: 10px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        overflow: hidden;
+      }
 
-nav a:hover {
-    color: white;
-}
+      .preview-box.empty {
+        color: #95a5a6;
+      }
 
-a{
-    text-decoration: none;
-}
-.task-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
+      .task-actions {
+        display: flex;
+        justify-content: flex-end;
+      }
 
-.task-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.08);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+      .open-btn {
+        background: #3498db;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        text-decoration: none;
+      }
 
-.task-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.task-id {
-    font-weight: bold;
-    color: #2f3640;
-    text-decoration: none;
-}
-
-.task-id:hover {
-    color: #3498db;
-}
-
-.task-meta {
-    font-size: 12px;
-    color: #7f8c8d;
-}
-
-.task-preview {
-    font-size: 13px;
-    color: #2f3640;
-}
-
-.preview-box {
-    background: #f5f6fa;
-    padding: 10px;
-    border-radius: 8px;
-    font-family: monospace;
-    font-size: 12px;
-    overflow: hidden;
-}
-
-.preview-box.empty {
-    color: #95a5a6;
-}
-
-.task-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.open-btn {
-    background: #3498db;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    text-decoration: none;
-}
-
-.open-btn:hover {
-    background: #2980b9;
-}
-
+      .open-btn:hover {
+        background: #2980b9;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <header>CROW - Task Manager</header>
 
-<header>
-    CROW - Task Manager
-</header>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/clients">Clients</a>
+      <a href="/calendar">Kalender</a>
+    </nav>
 
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/jobs">Jobs</a>
-    <a href="/tasks">Tasks</a>
-    <a href="/clients">Clients</a>
-    <a href="/calendar">Kalender</a>
-</nav>
-
-<div class="container">
-
-    <div class="task-grid">
-
+    <div class="container">
+      <div class="task-grid">
         <!-- TASK ERSTELLEN -->
         <div class="card">
+          <h2>Neue Task erstellen</h2>
 
-            <h2>Neue Task erstellen</h2>
+          <form method="post">
+            {% csrf_token %}
 
-            <form method="post">
+            <!-- TASK ID -->
+            <label>Task ID</label>
+            <p class="error">{{error}}</p>
+            <input
+              type="text"
+              name="id"
+              placeholder="z.B. backup_task"
+              required
+            />
 
-                {% csrf_token %}
+            <!-- JOB TYPE -->
+            <label>Job Typ</label>
 
-                <!-- TASK ID -->
-                <label>Task ID</label>
-                <p class="error">{{error}}</p>
-                <input
-                    type="text"
-                    name="id"
-                    placeholder="z.B. backup_task"
-                    required
-                >
+            <select name="job_type" id="job_type">
+              <option value="python">Python Script</option>
 
-                <!-- JOB TYPE -->
-                <label>Job Typ</label>
+              <option value="command">Command</option>
 
-                <select name="job_type" id="job_type">
+              <option value="shell_command">Shell Command</option>
+            </select>
 
-                    <option value="python">
-                        Python Script
-                    </option>
+            <div id="dynamic-fields"></div>
 
-                    <option value="command">
-                        Command
-                    </option>
+            <button type="submit">Task speichern</button>
+          </form>
+          {% if created_task_id %}
 
-                    <option value="shell_command">
-                        Shell Command
-                    </option>
+          <script>
+            const result = confirm(
+              "Task erfolgreich erstellt.\n\nWillst du daraus jetzt einen Job erstellen?",
+            );
 
-                </select>
+            if (result) {
+              window.location.href = "/jobs?task_id={{ created_task_id }}";
+            }
+          </script>
 
-                <div id="dynamic-fields">
-
-                </div>
-
-                <button type="submit">
-                    Task speichern
-                </button>
-
-            </form>
-            {% if created_task_id %}
-
-            <script>
-
-                const result = confirm(
-                    "Task erfolgreich erstellt.\n\nWillst du daraus jetzt einen Job erstellen?"
-                );
-
-                if (result) {
-
-                    window.location.href =
-                        "/jobs?task_id={{ created_task_id }}";
-
-                }
-
-            </script>
-
-            {% endif %}
+          {% endif %}
         </div>
 
         <!-- TASK LISTE -->
         <div class="card">
+          <h2>Vorhandene Tasks</h2>
 
-    <h2>Vorhandene Tasks</h2>
+          <div class="task-list">
+            {% for task in tasks %}
 
-    <div class="task-list">
-
-        {% for task in tasks %}
-
-        <div class="task-card">
-
-            <!-- HEADER -->
-            <div class="task-header">
-
+            <div class="task-card">
+              <!-- HEADER -->
+              <div class="task-header">
                 <a class="task-id" href="/tasks/{{ task.id }}">
-                    {{ task.id }}
+                  {{ task.id }}
                 </a>
 
-                <span class="badge">
-                    {{ task.task_type }}
-                </span>
+                <span class="badge"> {{ task.task_type }} </span>
+              </div>
 
+              <!-- META -->
+              <div class="task-meta">
+                <div><b>Erstellt:</b> {{ task.created_at }}</div>
+              </div>
+
+              <!-- ACTION -->
+              <div class="task-actions">
+                <a class="open-btn" href="/tasks/{{ task.id }}"> Öffnen → </a>
+              </div>
             </div>
 
-            <!-- META -->
-            <div class="task-meta">
-                <div>
-                    <b>Erstellt:</b> {{ task.created_at }}
-                </div>
-            </div>
-
-            <!-- ACTION -->
-            <div class="task-actions">
-                <a class="open-btn" href="/tasks/{{ task.id }}">
-                    Öffnen →
-                </a>
-            </div>
-
-        </div>
-
-        {% empty %}
+            {% empty %}
             <p>Keine Tasks vorhanden</p>
-        {% endfor %}
-
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
 
-</div>
-
-    </div>
-
-</div>
-
-<script>
-
-    const fieldConfig = {
-
+    <script>
+      const fieldConfig = {
         python: [
-
-            {
-                label: "Python Datei",
-                type: "text",
-                name: "python_file",
-                placeholder: "z.B. C:/Projects/backup.py"
-            },
-            {
-                label: "Python executable",
-                type: "text",
-                name: "python_exec",
-                placeholder: "C:/User/python/python.exe"
-            },
-
-            {
-                label: "Python Argumente",
-                type: "textarea",
-                name: "python_args",
-                placeholder: "--debug --port 5000"
-            }
-
+          {
+            label: "Python Datei",
+            type: "text",
+            name: "python_file",
+            placeholder: "z.B. C:/Projects/backup.py",
+          },
+          {
+            label: "Python executable",
+            type: "text",
+            name: "python_exec",
+            placeholder: "C:/User/python/python.exe",
+          },
         ],
 
         command: [
+          {
+            label: "CMD Befehl",
+            type: "textarea",
+            name: "cmd_command",
+            placeholder: "ipconfig /all",
+          },
 
-            {
-                label: "CMD Befehl",
-                type: "textarea",
-                name: "cmd_command",
-                placeholder: "ipconfig /all"
-            },
-
-            {
-                label: "CMD Parameter",
-                type: "textarea",
-                name: "cmd_args",
-                placeholder: "--force"
-            }
-
+          {
+            label: "CMD Parameter",
+            type: "textarea",
+            name: "cmd_args",
+            placeholder: "--force",
+          },
         ],
 
         shell_command: [
+          {
+            label: "Shell Command",
+            type: "text",
+            name: "Shell_command",
+            placeholder: "rsync /home/user/ /backup/",
+          },
+        ],
+      };
 
-            {
-                label: "Shell Script",
-                type: "text",
-                name: "Shell_command",
-                placeholder: "deploy.sh"
-            }
+      const jobTypeSelect = document.getElementById("job_type");
+      const dynamicFields = document.getElementById("dynamic-fields");
 
-        ]
-
-    };
-
-    const jobTypeSelect = document.getElementById("job_type");
-    const dynamicFields = document.getElementById("dynamic-fields");
-
-    function loadFields(type) {
-
+      function loadFields(type) {
         dynamicFields.innerHTML = "";
 
         const fields = fieldConfig[type];
 
         if (!fields) return;
 
-        fields.forEach(field => {
+        fields.forEach((field) => {
+          const wrapper = document.createElement("div");
 
-            const wrapper = document.createElement("div");
+          const label = document.createElement("label");
+          label.innerText = field.label;
 
-            const label = document.createElement("label");
-            label.innerText = field.label;
+          let input;
 
-            let input;
+          if (field.type === "textarea") {
+            input = document.createElement("textarea");
+            input.rows = 5;
+          } else {
+            input = document.createElement("input");
+            input.type = field.type;
+          }
 
-            if (field.type === "textarea") {
+          input.name = field.name;
+          input.placeholder = field.placeholder || "";
 
-                input = document.createElement("textarea");
-                input.rows = 5;
+          wrapper.appendChild(label);
+          wrapper.appendChild(input);
 
-            } else {
-
-                input = document.createElement("input");
-                input.type = field.type;
-
-            }
-
-            input.name = field.name;
-            input.placeholder = field.placeholder || "";
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(input);
-
-            dynamicFields.appendChild(wrapper);
-
+          dynamicFields.appendChild(wrapper);
         });
+      }
 
-    }
-
-    jobTypeSelect.addEventListener("change", function() {
-
+      jobTypeSelect.addEventListener("change", function () {
         loadFields(this.value);
+      });
 
-    });
-
-    // Initial laden
-    loadFields(jobTypeSelect.value);
-
-</script>
-</body>
+      // Initial laden
+      loadFields(jobTypeSelect.value);
+    </script>
+  </body>
 </html>

@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "8000:8000"
+      - "4040:4040"
 
     environment:
       USE_DOCKER: "1"

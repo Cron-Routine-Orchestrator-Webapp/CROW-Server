@@ -146,7 +146,6 @@ def calendar_view(request):
                 "status": ("Aktiv" if job.enabled else "Deaktiviert"),
             }
         )
-    jobs_by_date.sort()
     # Kalender bauen
     calendar_days = []
 
@@ -252,7 +251,11 @@ def job_detail(request, job_id):
     print(job)
     client_name = Client.objects.get(id=job.client_id).name
     client_ip = Client.objects.get(id=job.client_id).ip
-    return render(request, "job_detail.html", {"job": job, "client_name": client_name, "client_ip": client_ip})
+    return render(
+        request,
+        "job_detail.html",
+        {"job": job, "client_name": client_name, "client_ip": client_ip},
+    )
 
 
 def task_detail(request, task_id):

@@ -1,45 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>CROW - Kalender</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
-    <link rel="stylesheet" href="{% static 'calendar.css' %}">
-</head>
-<body>
+    <link rel="stylesheet" href="{% static 'calendar.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
+  </head>
+  <body>
+    <style>
+      .day {
+        text-decoration: none;
+        color: inherit;
+      }
+    </style>
 
-<style>
-    .day{
-        text-decoration: none; color: inherit
-    }
-</style>
+    <header>CROW - Kalender Ansicht</header>
 
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/tasks">Tasks</a>
+      <a href="/clients">Clients</a>
+      <a href="/calendar">Kalender</a>
+    </nav>
 
-<header>
-    CROW - Kalender Ansicht
-</header>
-
-<nav>
-    <a href="/">Dashboard</a>
-    <a href="/jobs">Jobs</a>
-    <a href="/tasks">Tasks</a>
-    <a href="/clients">Clients</a>
-    <a href="/calendar">Kalender</a>
-</nav>
-
-<div class="container">
-
-    <div class="calendar-header">
+    <div class="container">
+      <div class="calendar-header">
         <a href="{{ prev_month_url }}" class="nav-btn">←</a>
 
         <h2>{{ current_month }} {{ current_year }}</h2>
 
         <a href="{{ next_month_url }}" class="nav-btn">→</a>
-    </div>
+      </div>
 
-    <!-- Wochentage -->
-    <div class="weekdays">
+      <!-- Wochentage -->
+      <div class="weekdays">
         <div>Mo</div>
         <div>Di</div>
         <div>Mi</div>
@@ -47,40 +44,30 @@
         <div>Fr</div>
         <div>Sa</div>
         <div>So</div>
-    </div>
+      </div>
 
-    <!-- EINZIGER Kalender -->
-    <div class="calendar">
-
+      <!-- EINZIGER Kalender -->
+      <div class="calendar">
         <!-- Leere Felder am Monatsanfang -->
         {% for i in start_weekday_range %}
-            <div class="day empty"></div>
+        <div class="day empty"></div>
         {% endfor %}
 
         <!-- Echte Tage -->
         {% for day in calendar_days %}
-            <a href="/jobs/?date={{ day.date|date:'Y-m-d' }}" class="day">
-                
-                <div class="day-number">
-                    {{ day.day }}
-                </div>
+        <a href="/jobs/?date={{ day.date|date:'Y-m-d' }}" class="day">
+          <div class="day-number">{{ day.day }}</div>
 
-                {% for job in day.jobs %}
-                    <div class="job 
-                        {% if job.status == 'Aktiv' %}active{% endif %}
-                        {% if job.status == 'Geplant' %}planned{% endif %}
-                        {% if job.status == 'Abgeschlossen' %}done{% endif %}
-                    ">
-                        {{ job.time }} - {{ job.title }}
-                    </div>
-                {% endfor %}
-
-            </a>
+          {% for job in day.jobs %}
+          <div
+            class="job {% if job.status == 'Aktiv' %}active{% endif %} {% if job.status == 'Geplant' %}planned{% endif %} {% if job.status == 'Abgeschlossen' %}done{% endif %}"
+          >
+            {{ job.time }} - {{ job.title }}
+          </div>
+          {% endfor %}
+        </a>
         {% endfor %}
-
+      </div>
     </div>
-
-</div>
-
-</body>
+  </body>
 </html>
