@@ -38,7 +38,7 @@ def jobs(request) -> HttpResponse:
                     client_id=request.POST.get("client_id"),
                     time_to_run=f"{request.POST.get('date')} {request.POST.get('time')}",
                     repeat=request.POST.get("repetition"),
-                    last_task_status=request.POST.get("enabled"),
+                    last_task_status=False,
                 )
             except django.db.utils.IntegrityError:
                 return render(
