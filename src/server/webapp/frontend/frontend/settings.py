@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-8orjtc^_c$t03$m(8sry8(6#xny77ad^-%ur16gygdw!j#6=c(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = os.getenv("DEBUG", "1") == "1"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 
 # Application definition
@@ -76,10 +76,8 @@ WSGI_APPLICATION = "frontend.wsgi.application"
 
 USE_DOCKER = os.environ.get("USE_DOCKER", "0") == "1"
 
-if USE_DOCKER:
-    DB_NAME = "/data/db.sqlite3"
-else:
-    DB_NAME = BASE_DIR / "db.sqlite3"
+
+DB_NAME: Path = Path("/data/db.sqlite3") if USE_DOCKER else BASE_DIR / "db.sqlite3"
 
 DATABASES = {
     "default": {

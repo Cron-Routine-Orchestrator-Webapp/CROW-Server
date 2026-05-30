@@ -1,22 +1,19 @@
 import os
 import django
-import uuid
-from datetime import datetime
 
-# 👉 wichtig: dein Projekt heißt "frontend"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "frontend.settings")
 
 django.setup()
 
-from ui.models import Job, Task, Client
+from server.webapp.frontend.ui.models import Client  # noqa: E402
 
 
-def run():
+def run() -> None:
     client_id = "test_client"
     client_name = "Test Client"
     client_ip = "192.168.178.54"
-    client_os = "lin" # lin / win / mac
-    
+    client_os = "lin"  # lin / win / mac
+
     client, created = Client.objects.get_or_create(
         id=client_id,
         defaults={
@@ -26,8 +23,6 @@ def run():
             "os": client_os,
         },
     )
-    
-
 
     if created:
         print("Client gespeichert:", client.id)

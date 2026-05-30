@@ -9,7 +9,7 @@
 
     {% load static %}
     <link rel="stylesheet" href="/static/styles.css" />
-    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}" />
 
     <style>
       body {
@@ -235,80 +235,70 @@
           <div class="meta-label">Aktiv</div>
           <div>{{ job.enabled }}</div>
 
-            <div class="meta-label">Nächste Ausführung</div>
-            <div>
-              {% if job.time_to_run %}
-              {{ job.time_to_run }}
-              {% else %}
-              Keine geplante Ausführung
-              {% endif %}
-            </div>
+          <div class="meta-label">Nächste Ausführung</div>
+          <div>
+            {% if job.time_to_run %} {{ job.time_to_run }} {% else %} Keine
+            geplante Ausführung {% endif %}
+          </div>
 
-            <div class="meta-label">Letzte Ausführung</div>
-            <div>
-              {% if job.last_run %}
-              {{ job.last_run }}
-              {% else %}
-              Noch nicht ausgeführt
-              {% endif %}
-            </div>
+          <div class="meta-label">Letzte Ausführung</div>
+          <div>
+            {% if job.last_run %} {{ job.last_run }} {% else %} Noch nicht
+            ausgeführt {% endif %}
+          </div>
 
-            <div class="meta-label">Letzter Status</div>
-            <div>
-              {% if job.last_task_status %}
-              {{ job.last_task_status }}
-              {% else %}
-              Noch nicht ausgeführt
-              {% endif %}
-            </div>
+          <div class="meta-label">Letzter Status</div>
+          <div>
+            {% if job.last_task_status %} {{ job.last_task_status }} {% else %}
+            Noch nicht ausgeführt {% endif %}
           </div>
         </div>
+      </div>
 
-        <div class="actions">
-          <a href="/jobs" class="btn btn-back"> ← Zurück </a>
+      <div class="actions">
+        <a href="/jobs" class="btn btn-back"> ← Zurück </a>
 
-          <form
-            method="post"
-            onsubmit="return confirm('Willst du diesen Job wirklich löschen?');"
-          >
-            {% csrf_token %}
-
-            <button
-              type="submit"
-              name="delete_job"
-              value="true"
-              class="btn btn-delete"
-            >
-              Job löschen
-            </button>
-          </form>
-        </div>
-
-        <form method="post" class="switch-wrapper">
+        <form
+          method="post"
+          onsubmit="return confirm('Willst du diesen Job wirklich löschen?');"
+        >
           {% csrf_token %}
 
-          <input type="hidden" name="toggle_enabled" value="true" />
-
-          <div class="switch-label">Job aktivieren</div>
-
-          <label class="switch">
-            <input
-              type="checkbox"
-              name="enabled"
-              value="true"
-              {%
-              if
-              job.enabled
-              %}checked{%
-              endif
-              %}
-              onchange="this.form.submit()"
-            />
-
-            <span class="slider"></span>
-          </label>
+          <button
+            type="submit"
+            name="delete_job"
+            value="true"
+            class="btn btn-delete"
+          >
+            Job löschen
+          </button>
         </form>
       </div>
+
+      <form method="post" class="switch-wrapper">
+        {% csrf_token %}
+
+        <input type="hidden" name="toggle_enabled" value="true" />
+
+        <div class="switch-label">Job aktivieren</div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            name="enabled"
+            value="true"
+            {%
+            if
+            job.enabled
+            %}checked{%
+            endif
+            %}
+            onchange="this.form.submit()"
+          />
+
+          <span class="slider"></span>
+        </label>
+      </form>
     </div>
   </body>
 </html>

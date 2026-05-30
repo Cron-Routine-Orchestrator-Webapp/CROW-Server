@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from dateutil.relativedelta import relativedelta
 from time import sleep
-from ..helper.types import Client, Job, Task, TaskParameters, Request, Response
+from ..helper.types import Client, Job, Task, Response
 from ...frontend.database_backend import DatabaseBackend
 from ..websocket_communication.handler import WebSocketHandler
 
@@ -87,20 +87,25 @@ class CronClock:
             case "None":
                 self.db_handler.update_job(job.ID, "enabled", False)
             case "daily":
-                next_run: datetime = job.TIME_TO_RUN + timedelta(days=1)
-                self.db_handler.update_job(job.ID, "time_to_run", next_run)
+                self.db_handler.update_job(
+                    job.ID, "time_to_run", job.TIME_TO_RUN + timedelta(days=1)
+                )
             case "weekly":
-                next_run: datetime = job.TIME_TO_RUN + timedelta(weeks=1)
-                self.db_handler.update_job(job.ID, "time_to_run", next_run)
+                self.db_handler.update_job(
+                    job.ID, "time_to_run", job.TIME_TO_RUN + timedelta(weeks=1)
+                )
             case "2-weekly":
-                next_run: datetime = job.TIME_TO_RUN + timedelta(weeks=2)
-                self.db_handler.update_job(job.ID, "time_to_run", next_run)
+                self.db_handler.update_job(
+                    job.ID, "time_to_run", job.TIME_TO_RUN + timedelta(weeks=2)
+                )
             case "monthly":
-                next_run: datetime = job.TIME_TO_RUN + relativedelta(months=1)
-                self.db_handler.update_job(job.ID, "time_to_run", next_run)
+                self.db_handler.update_job(
+                    job.ID, "time_to_run", job.TIME_TO_RUN + relativedelta(months=1)
+                )
             case "yearly":
-                next_run: datetime = job.TIME_TO_RUN + relativedelta(years=1)
-                self.db_handler.update_job(job.ID, "time_to_run", next_run)
+                self.db_handler.update_job(
+                    job.ID, "time_to_run", job.TIME_TO_RUN + relativedelta(years=1)
+                )
             case _:
                 return  # No repeat, do nothing
 

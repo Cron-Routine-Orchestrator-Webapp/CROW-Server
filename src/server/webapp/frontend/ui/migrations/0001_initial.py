@@ -5,32 +5,47 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Job',
+            name="Job",
             fields=[
-                ('id', models.CharField(max_length=255, primary_key=True, serialize=False)),
-                ('schedule', models.CharField(max_length=255)),
-                ('enabled', models.BooleanField(default=True)),
-                ('last_run', models.DateTimeField(blank=True, null=True)),
-                ('last_task_status', models.CharField(blank=True, max_length=50, null=True)),
-                ('active_task_id', models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "id",
+                    models.CharField(max_length=255, primary_key=True, serialize=False),
+                ),
+                ("schedule", models.CharField(max_length=255)),
+                ("enabled", models.BooleanField(default=True)),
+                ("last_run", models.DateTimeField(blank=True, null=True)),
+                (
+                    "last_task_status",
+                    models.CharField(blank=True, max_length=50, null=True),
+                ),
+                (
+                    "active_task_id",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.CharField(max_length=255, primary_key=True, serialize=False)),
-                ('status', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('job', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ui.job')),
+                (
+                    "id",
+                    models.CharField(max_length=255, primary_key=True, serialize=False),
+                ),
+                ("status", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "job",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="ui.job"
+                    ),
+                ),
             ],
         ),
     ]

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("ui", "0005_remove_task_time_to_run_job_time_to_run_and_more"),
     ]

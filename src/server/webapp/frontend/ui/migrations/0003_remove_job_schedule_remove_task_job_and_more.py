@@ -4,37 +4,36 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ui', '0002_client'),
+        ("ui", "0002_client"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='job',
-            name='schedule',
+            model_name="job",
+            name="schedule",
         ),
         migrations.RemoveField(
-            model_name='task',
-            name='job',
+            model_name="task",
+            name="job",
         ),
         migrations.RemoveField(
-            model_name='task',
-            name='status',
+            model_name="task",
+            name="status",
         ),
         migrations.AddField(
-            model_name='job',
-            name='client_id',
+            model_name="job",
+            name="client_id",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='job',
-            name='task_id',
+            model_name="job",
+            name="task_id",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='task',
-            name='time_to_run',
+            model_name="task",
+            name="time_to_run",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

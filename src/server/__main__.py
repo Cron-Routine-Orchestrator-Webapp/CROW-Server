@@ -8,7 +8,7 @@ from django.core.management import execute_from_command_line
 DJANGO_SETTINGS_MODULE = "server.webapp.frontend.frontend.settings"
 
 
-def run_django():
+def run_django() -> None:
     """
     Starts Django runserver in the main thread (blocking).
     """

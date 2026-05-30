@@ -7,9 +7,10 @@ os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE", "server.webapp.frontend.frontend.settings"
 )
 django.setup()
-from django.core.exceptions import ObjectDoesNotExist
-from server.webapp.frontend.ui.models import Job, Client, Task
-from server.webapp.backend.helper.types import (
+
+from django.core.exceptions import ObjectDoesNotExist  # noqa: E402
+from server.webapp.frontend.ui.models import Job, Client, Task  # noqa: E402
+from server.webapp.backend.helper.types import (  # noqa: E402
     Client as TypesClient,
     Job as TypesJob,
     Task as TypesTask,
@@ -130,8 +131,8 @@ class DatabaseBackend:
                 last_task_status=last_task_status,
             )
             print(f"Successfully created Job:  {job_id}")
-        except:
-            print("An error occured!")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def update_job(self, job_id: str, field: str, value: Any) -> None:
         try:

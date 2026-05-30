@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ui', '0006_rename_job_type_task_task_type_and_more'),
+        ("ui", "0006_rename_job_type_task_task_type_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='job',
-            name='repeat',
+            model_name="job",
+            name="repeat",
             field=models.CharField(default=None, null=True),
         ),
     ]

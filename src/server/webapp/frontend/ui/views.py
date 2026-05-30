@@ -1,10 +1,10 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db import transaction
 import django
 import calendar
 from datetime import datetime, date
 from server.webapp.frontend.ui.models import Job, Client, Task
-from django.shortcuts import get_object_or_404
 import json
 from collections import defaultdict
 
@@ -13,7 +13,7 @@ from server.webapp.frontend.database_backend import DatabaseBackend as backend
 # Create your views here.
 
 
-def home(request):
+def home(request) -> HttpResponse:
     selected_date = request.GET.get("date")
     print(selected_date)  # DEBUG
 
@@ -24,7 +24,7 @@ def home(request):
     )
 
 
-def jobs(request):
+def jobs(request) -> HttpResponse:
     clients_list = list(Client.objects.all())
     tasks_list = list(Task.objects.all())
     jobs_list = list(Job.objects.all())
@@ -36,7 +36,7 @@ def jobs(request):
                     enabled=request.POST.get("enabled"),
                     task_id=request.POST.get("task_id"),
                     client_id=request.POST.get("client_id"),
-                    time_to_run=f"{request.POST.get("date")} {request.POST.get("time")}",
+                    time_to_run=f"{request.POST.get('date')} {request.POST.get('time')}",
                     repeat=request.POST.get("repetition"),
                     last_task_status=request.POST.get("enabled"),
                 )
@@ -56,12 +56,11 @@ def jobs(request):
 
     task_id = request.GET.get("task_id")
 
-    if task_id:
-        selected_task = task_id
+    selected_task = task_id or None
 
-    clients_list = list(Client.objects.all())
-    tasks_list = list(Task.objects.all())
-    jobs_list = list(Job.objects.all())
+    clients_list: list[Client] = list(Client.objects.all())  # type: ignore[no-redef]
+    tasks_list: list[Task] = list(Task.objects.all())  # type: ignore[no-redef]
+    jobs_list: list[Job] = list(Job.objects.all())  # type: ignore[no-redef]
     return render(
         request,
         "jobs.html",
@@ -69,7 +68,7 @@ def jobs(request):
             "clients": clients_list,
             "tasks": tasks_list,
             "jobs": jobs_list,
-            "selected_task": task_id,
+            "selected_task": selected_task,
         },
     )
 
@@ -78,10 +77,9 @@ def tasks(request):
     tasks_list = list(Task.objects.all())
     if request.method == "POST":
         with transaction.atomic():
-
             try:
                 args = request.POST.get("python_args")
-                if args == None:
+                if args is None:
                     args = request.POST.get("cmd_args")
                 Task.objects.create(
                     id=request.POST.get("id"),
@@ -136,7 +134,6 @@ def calendar_view(request):
     jobs_by_date = defaultdict(list)
 
     for job in jobs:
-
         job_date = job.time_to_run.date()  # WICHTIG
 
         jobs_by_date[job_date].append(
@@ -150,7 +147,6 @@ def calendar_view(request):
     calendar_days = []
 
     for day in range(1, num_days + 1):
-
         current_date = date(year, month, day)
 
         calendar_days.append(
@@ -202,7 +198,6 @@ def get_next_client_id():
 
 def client_view(request):
     if request.method == "POST":
-
         with transaction.atomic():
             next_id = get_next_client_id()
 
@@ -233,15 +228,12 @@ def job_detail(request, job_id):
 
         # TOGGLE ENABLED
         if request.POST.get("toggle_enabled"):
-
             enabled = request.POST.get("enabled")
 
             if enabled == "true":
-
                 database_backend.update_job(job_id, field="enabled", value=True)
 
             else:
-
                 database_backend.update_job(job_id, field="enabled", value=False)
 
             return redirect(f"/jobs/{job_id}")

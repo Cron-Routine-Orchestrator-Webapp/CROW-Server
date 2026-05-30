@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("ui", "0006_alter_job_time_to_run"),
         ("ui", "0007_job_repeat"),

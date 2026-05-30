@@ -4,29 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ui', '0005_remove_task_time_to_run_job_time_to_run_and_more'),
+        ("ui", "0005_remove_task_time_to_run_job_time_to_run_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='task',
-            old_name='job_type',
-            new_name='task_type',
+            model_name="task",
+            old_name="job_type",
+            new_name="task_type",
         ),
         migrations.RemoveField(
-            model_name='task',
-            name='parameters',
+            model_name="task",
+            name="parameters",
         ),
         migrations.AddField(
-            model_name='task',
-            name='task_data',
+            model_name="task",
+            name="task_data",
             field=models.JSONField(blank=True, default=dict, null=True),
         ),
         migrations.AlterField(
-            model_name='job',
-            name='time_to_run',
+            model_name="job",
+            name="time_to_run",
             field=models.DateTimeField(blank=True, default=1),
         ),
     ]

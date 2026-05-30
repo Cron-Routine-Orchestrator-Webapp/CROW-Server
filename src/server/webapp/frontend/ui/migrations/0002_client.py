@@ -4,19 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('ui', '0001_initial'),
+        ("ui", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Client',
+            name="Client",
             fields=[
-                ('id', models.CharField(max_length=255, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('ip', models.GenericIPAddressField()),
-                ('os', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.CharField(max_length=255, primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("ip", models.GenericIPAddressField()),
+                ("os", models.CharField(max_length=255)),
             ],
         ),
     ]
