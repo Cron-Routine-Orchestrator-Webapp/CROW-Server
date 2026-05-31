@@ -17,10 +17,10 @@ COPY pyproject.toml uv.lock README.md ./
 
 RUN uv sync --frozen --no-dev
 
-RUN uv run python src/server/webapp/frontend/manage.py collectstatic --noinput
-
 # app code
 COPY . .
+
+RUN uv run python src/server/webapp/frontend/manage.py collectstatic --noinput
 
 ENV PYTHONUNBUFFERED=1
 
