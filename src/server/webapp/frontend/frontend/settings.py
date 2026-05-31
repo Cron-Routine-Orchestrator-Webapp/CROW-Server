@@ -125,5 +125,5 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "server" / "webapp" / "frontend" / "ui" / "static",
+    BASE_DIR / "ui" / "static",
 ]
