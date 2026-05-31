@@ -1,6 +1,6 @@
 [project]
 name = "crow-server"
-version = "1.0.3"
+version = "1.0.4"
 description = "CROW-Server"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -12,6 +12,7 @@ dependencies = [
     "sqlalchemy>=2.0.50",
     "websocket>=0.2.1",
     "websockets>=16.0",
+    "whitenoise>=6.9.0",
 ]
 
 [project.optional-dependencies]
